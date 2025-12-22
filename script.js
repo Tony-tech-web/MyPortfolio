@@ -3,6 +3,7 @@ const header = document.querySelector('header');
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn'); 
 const textElement = document.querySelector('.typing-text');
 const cursorElement = document.querySelector('.cursor');
+const themeToggle = document.querySelector('.theme-toggle');
 
 // Scroll Effect for Header
 window.addEventListener('scroll', () => {
@@ -65,6 +66,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.addEventListener('scroll', checkReveal);
     checkReveal(); // Check on load
+
+    // Theme Toggle
+    const applyTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        const icon = themeToggle?.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'light' ? 'fa-regular fa-moon' : 'fa-regular fa-sun';
+        }
+    };
+
+    const storedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(storedTheme);
+    themeToggle?.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', next);
+        applyTheme(next);
+    });
 
     // Web3Forms Handling
     const form = document.getElementById('form');
