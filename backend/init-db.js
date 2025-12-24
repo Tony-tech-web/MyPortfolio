@@ -16,9 +16,9 @@ async function initDatabase() {
     
     const existingUser = await User.findByEmail('admin@portfolio.com');
     if (!existingUser) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
       await User.create('admin', 'admin@portfolio.com', hashedPassword, 'admin');
-      console.log('Default admin user created: admin@portfolio.com / admin123');
+      console.log('Default admin user created: admin@portfolio.com / ' + process.env.ADMIN_PASSWORD);
     }
     
     process.exit(0);

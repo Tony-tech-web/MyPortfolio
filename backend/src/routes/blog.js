@@ -14,10 +14,27 @@ const blogSchema = Joi.object({
   published: Joi.boolean()
 });
 
-// Get all blog posts (public - only published)
+// Get all blog posts (public - from Blogger API)
 router.get('/', async (req, res, next) => {
   try {
-    const posts = await BlogPost.findAll(true);
+    const apiKey = process.env.BLOGGER_API_KEY;
+    const blogId = process.env.BLOGGER_BLOG_ID;
+    const url = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${apiKey}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Blogger API error: ${response.status}`);
+    }
+    const data = await response.json();
+
+    const posts = data.items.map(post => ({
+      id: post.id,
+      title: post.title,
+      excerpt: post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 300) + '...' : '',
+      tags: post.labels || [],
+      created_at: post.published
+    }));
+
     res.json(posts);
   } catch (err) {
     next(err);

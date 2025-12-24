@@ -3,17 +3,12 @@ import axios from 'axios';
 
 const Home = () => {
   const [projects, setProjects] = useState([]);
-  const [blogPosts, setBlogPosts] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [projectsRes, blogRes] = await Promise.all([
-          axios.get('http://localhost:3001/api/projects'),
-          axios.get('http://localhost:3001/api/blog')
-        ]);
+        const projectsRes = await axios.get('http://localhost:3001/api/projects');
         setProjects(projectsRes.data.slice(0, 3));
-        setBlogPosts(blogRes.data.slice(0, 3));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -71,31 +66,6 @@ const Home = () => {
                     </a>
                   )}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Recent Blog Posts */}
-      <section className="py-16 bg-gray-800">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center mb-12">Recent Blog Posts</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {blogPosts.map(post => (
-              <div key={post.id} className="bg-gray-700 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
-                <p className="text-gray-300 mb-4">{post.excerpt}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags.map(tag => (
-                    <span key={tag} className="bg-green-600 px-2 py-1 rounded text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <a href={`/blog/${post.id}`} className="text-blue-400 hover:text-blue-300">
-                  Read More →
-                </a>
               </div>
             ))}
           </div>
