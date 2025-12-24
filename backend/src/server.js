@@ -45,14 +45,20 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
+// Database connection with graceful handling
+let dbConnected = false;
 pool.connect((err) => {
   if (err) {
     console.error('Database connection error:', err);
-    process.exit(1);
+    console.log('Server will start without database connection. Some features may not work.');
+  } else {
+    console.log('Connected to PostgreSQL database');
+    dbConnected = true;
   }
-  console.log('Connected to PostgreSQL database');
-  
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+});
+
+// Start server regardless of database connection
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Database connected: ${dbConnected}`);
 });

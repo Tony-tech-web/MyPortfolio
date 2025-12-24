@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-fullstack",
+  "version": "1.0.0",
+  "description": "Full-stack portfolio website with CMS",
+  "scripts": {
+    "setup": "node setup.js",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "install-all": "npm run setup",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "keywords": ["portfolio", "cms", "fullstack", "react", "express"],
+  "author": "Alidu Anthony",
+  "license": "MIT"
+}

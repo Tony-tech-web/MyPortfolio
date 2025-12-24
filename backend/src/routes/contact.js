@@ -18,8 +18,18 @@ router.post('/', async (req, res, next) => {
     const { error } = contactSchema.validate(req.body);
     if (error) return res.status(400).json({ error: error.details[0].message });
 
-    const contact = await Contact.create(req.body.name, req.body.email, req.body.message);
-    res.status(201).json({ message: 'Message sent successfully', id: contact.id });
+    // Check if database is connected
+    const { pool } = require('../config/database');
+    try {
+      await pool.query('SELECT 1');
+      // Database is connected, save to database
+      const contact = await Contact.create(req.body.name, req.body.email, req.body.message);
+      res.status(201).json({ message: 'Message sent successfully', id: contact.id });
+    } catch (dbError) {
+      // Database not connected, just return success (Web3Forms handles the email)
+      console.log('Database not available, message handled by Web3Forms only');
+      res.status(201).json({ message: 'Message sent successfully (Web3Forms only)' });
+    }
   } catch (err) {
     next(err);
   }
