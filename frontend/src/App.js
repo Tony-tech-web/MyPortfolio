@@ -7,6 +7,7 @@ import Projects from './components/Projects';
 import Blog from './components/Blog';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import { Analytics } from "@vercel/analytics/next"
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Contact />
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 }

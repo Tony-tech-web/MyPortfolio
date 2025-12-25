@@ -104,8 +104,8 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <i className="fas fa-envelope text-blue-400 mr-3 w-5"></i>
-                  <a href="mailto:contact@tonydev.com" className="text-gray-300 hover:text-blue-400 transition-colors">
-                    contact@tonydev.com
+                  <a href="mailto:tonyalidu@gmail.com" className="text-gray-300 hover:text-blue-400 transition-colors">
+                    tonyalidu@gmail.com
                   </a>
                 </div>
                 <div className="flex items-center">
