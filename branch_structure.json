@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "main",
+    "origin",
+    "vercel/set-up-vercel-web-analytics-in-47h3vq"
+  ],
+  "parent": {
+    "main": null,
+    "origin": "main",
+    "vercel/set-up-vercel-web-analytics-in-47h3vq": "main"
+  },
+  "order": [
+    "main",
+    "origin",
+    "vercel/set-up-vercel-web-analytics-in-47h3vq"
+  ]
+}
