@@ -40,6 +40,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('Portfolio API is running');
+});
+
 // Error handling
 app.use(errorHandler);
 

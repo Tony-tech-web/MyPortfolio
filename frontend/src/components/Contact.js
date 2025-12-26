@@ -66,11 +66,14 @@ const Contact = () => {
 
       if (web3Result.success) {
         // Also save to backend database
-        try {
-          const apiUrl = (process.env.REACT_APP_API_URL || 'http://localhost:3001').replace(/\/$/, '');
-          await axios.post(`${apiUrl}/api/contact`, formData);
-        } catch (dbError) {
-          console.log('Database not available, but Web3Forms worked');
+        const apiUrl = process.env.REACT_APP_API_URL;
+        if (apiUrl && apiUrl.trim().length > 0) {
+          try {
+            const base = apiUrl.replace(/\/$/, '');
+            await axios.post(`${base}/api/contact`, formData);
+          } catch (dbError) {
+            console.log('Backend save failed, but Web3Forms worked');
+          }
         }
         setStatus('Message sent successfully! I\'ll get back to you soon.');
         setFormData({ name: '', email: '', message: '' });
