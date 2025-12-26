@@ -66,7 +66,8 @@ const Contact = () => {
       if (web3Result.success) {
         // Also save to backend database
         try {
-          await axios.post('http://localhost:3001/api/contact', formData);
+          const apiUrl = (process.env.REACT_APP_API_URL || 'http://localhost:3001').replace(/\/$/, '');
+          await axios.post(`${apiUrl}/api/contact`, formData);
         } catch (dbError) {
           console.log('Database not available, but Web3Forms worked');
         }
@@ -77,8 +78,7 @@ const Contact = () => {
       }
     } catch (error) {
       console.error('Web3Forms error:', error);
-      // Fallback: show success message anyway and provide alternative contact
-      setStatus('Message received! Since you\'re viewing this locally, please email me directly at tonyalidu@gmail.com or connect with me on LinkedIn.');
+      setStatus('Failed to send message. Please try again later or use the email link above.');
       setFormData({ name: '', email: '', message: '' });
     } finally {
       setLoading(false);

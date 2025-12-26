@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 const Hero = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const words = ["Software Developer", "Tech Innovator", "UI/UX Enthusiast", "Java Specialist"];
+  const words = useMemo(
+    () => ["Software Developer", "Tech Innovator", "UI/UX Enthusiast", "Java Specialist"],
+    []
+  );
 
   useEffect(() => {
     const currentWord = words[currentWordIndex];
