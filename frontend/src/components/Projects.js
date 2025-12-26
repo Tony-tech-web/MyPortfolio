@@ -92,17 +92,6 @@ const Projects = () => {
         forks: 2,
         isGitHub: false
       },
-      {
-        id: 7,
-        title: 'My Blog',
-        description: 'Blog about technology.',
-        technologies: ['HTML', 'CSS'],
-        github_url: 'https://www.blogger.com',
-        language: 'HTML',
-        stars: 0,
-        forks: 0,
-        isGitHub: false
-      }
     ];
 
     console.log('Projects loaded:', staticProjects);

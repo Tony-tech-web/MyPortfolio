@@ -8,34 +8,35 @@ const Hero = () => {
   const words = ["Software Developer", "Tech Innovator", "UI/UX Enthusiast", "Java Specialist"];
 
   useEffect(() => {
-    const type = () => {
-      const currentWord = words[currentWordIndex];
-
-      if (isDeleting) {
-        setCurrentText(currentWord.substring(0, currentText.length - 1));
+    const currentWord = words[currentWordIndex];
+    let delay = 100;
+ 
+    if (!isDeleting && currentText === currentWord) {
+      delay = 2000;
+    } else if (isDeleting) {
+      delay = 50;
+    }
+ 
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        const next = currentWord.substring(0, currentText.length + 1);
+        setCurrentText(next);
+        if (next === currentWord) {
+          setIsDeleting(true);
+        }
       } else {
-        setCurrentText(currentWord.substring(0, currentText.length + 1));
+        const prev = currentWord.substring(0, currentText.length - 1);
+        setCurrentText(prev);
+        if (prev.length === 0) {
+          setIsDeleting(false);
+          setCurrentWordIndex((idx) => (idx + 1) % words.length);
+          delay = 500;
+        }
       }
-
-      let typeSpeed = 100;
-
-      if (!isDeleting && currentText === currentWord) {
-        typeSpeed = 2000; // Pause at end of word
-        setIsDeleting(true);
-      } else if (isDeleting && currentText === '') {
-        setIsDeleting(false);
-        setCurrentWordIndex((prev) => (prev + 1) % words.length);
-        typeSpeed = 500; // Pause before new word
-      } else if (isDeleting) {
-        typeSpeed = 50;
-      }
-
-      setTimeout(type, typeSpeed);
-    };
-
-    const timeout = setTimeout(type, 100);
+    }, delay);
+ 
     return () => clearTimeout(timeout);
-  }, [currentText, currentWordIndex, isDeleting]);
+  }, [currentText, currentWordIndex, isDeleting, words]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -67,6 +68,13 @@ const Hero = () => {
           <button onClick={() => scrollToSection('contact')} className="btn-secondary">
             Hire Me
           </button>
+          <a
+            href={process.env.REACT_APP_CV_URL || '/Alidu Anthony - Curriculum Vitae.pdf'}
+            download
+            className="btn-secondary"
+          >
+            Download CV
+          </a>
         </div>
       </div>
     </section>
