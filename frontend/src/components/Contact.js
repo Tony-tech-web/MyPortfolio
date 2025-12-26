@@ -43,9 +43,10 @@ const Contact = () => {
 
     try {
       // Send to Web3Forms
-      const web3Key = process.env.REACT_APP_WEB3FORMS_KEY || '';
-      if (!web3Key) {
-        throw new Error('Missing Web3Forms key. Set REACT_APP_WEB3FORMS_KEY in environment.');
+      const web3KeyRaw = process.env.REACT_APP_WEB3FORMS_KEY || '';
+      const web3Key = web3KeyRaw.trim();
+      if (!web3Key || !/^[0-9a-f-]{36}$/i.test(web3Key)) {
+        throw new Error('Invalid Web3Forms key format. Check your REACT_APP_WEB3FORMS_KEY.');
       }
       const payload = {
         access_key: web3Key,
