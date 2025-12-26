@@ -54,10 +54,11 @@ const Contact = () => {
       web3FormData.append('message', formData.message);
       web3FormData.append('subject', `Portfolio Contact from ${formData.name}`);
       web3FormData.append('from_name', 'Portfolio Website');
-      web3FormData.append('to', 'tonyalidu@gmail.com');
+      web3FormData.append('replyto', formData.email);
 
       const web3Response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
+        headers: { 'Accept': 'application/json' },
         body: web3FormData
       });
 
