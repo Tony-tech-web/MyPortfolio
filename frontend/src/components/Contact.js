@@ -44,7 +44,11 @@ const Contact = () => {
     try {
       // Send to Web3Forms
       const web3FormData = new FormData();
-      web3FormData.append('access_key', 'e21d1feb-100a-4c99-9bda-39e0c116342c');
+      const web3Key = process.env.REACT_APP_WEB3FORMS_KEY || '';
+      if (!web3Key) {
+        throw new Error('Missing Web3Forms key. Set REACT_APP_WEB3FORMS_KEY in environment.');
+      }
+      web3FormData.append('access_key', web3Key);
       web3FormData.append('name', formData.name);
       web3FormData.append('email', formData.email);
       web3FormData.append('message', formData.message);
