@@ -43,23 +43,25 @@ const Contact = () => {
 
     try {
       // Send to Web3Forms
-      const web3FormData = new FormData();
       const web3Key = process.env.REACT_APP_WEB3FORMS_KEY || '';
       if (!web3Key) {
         throw new Error('Missing Web3Forms key. Set REACT_APP_WEB3FORMS_KEY in environment.');
       }
-      web3FormData.append('access_key', web3Key);
-      web3FormData.append('name', formData.name);
-      web3FormData.append('email', formData.email);
-      web3FormData.append('message', formData.message);
-      web3FormData.append('subject', `Portfolio Contact from ${formData.name}`);
-      web3FormData.append('from_name', 'Portfolio Website');
-      web3FormData.append('replyto', formData.email);
+      const payload = {
+        access_key: web3Key,
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        subject: `Portfolio Contact from ${formData.name}`,
+        from_name: 'Portfolio Website',
+        replyto: formData.email,
+        botcheck: ''
+      };
 
       const web3Response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: web3FormData
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const web3Result = await web3Response.json();
@@ -82,7 +84,7 @@ const Contact = () => {
       }
     } catch (error) {
       console.error('Web3Forms error:', error);
-      setStatus('Failed to send message. Please try again later or use the email link above.');
+      setStatus(error?.message || 'Failed to send message. Please try again later.');
       setFormData({ name: '', email: '', message: '' });
     } finally {
       setLoading(false);

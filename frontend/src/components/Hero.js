@@ -72,7 +72,7 @@ const Hero = () => {
             Hire Me
           </button>
           <a
-            href={process.env.REACT_APP_CV_URL || '/Alidu Anthony - Curriculum Vitae.pdf'}
+            href={process.env.REACT_APP_CV_URL || ((process.env.PUBLIC_URL || '') + '/Alidu Anthony - Curriculum Vitae.pdf')}
             download
             className="btn-secondary"
           >
