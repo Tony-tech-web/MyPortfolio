@@ -27,8 +27,17 @@ const InteractiveBackground = ({
     let animationFrameId;
     let width, height;
 
-    // Parse colors to RGB
-    const hexToRgb = (hex) => {
+    // Parse colors to RGB (support hex or CSS variable)
+    const getColorValue = (color) => {
+      if (color.startsWith('var(')) {
+        const varName = color.slice(4, -1);
+        return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+      }
+      return color;
+    };
+
+    const hexToRgb = (colorInput) => {
+      const hex = getColorValue(colorInput);
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result ? {
         r: parseInt(result[1], 16),
@@ -95,7 +104,7 @@ const InteractiveBackground = ({
       });
     };
 
-    // Mouse handlers
+    // Global mouse handlers
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current.targetX = e.clientX - rect.left;
@@ -143,44 +152,7 @@ const InteractiveBackground = ({
       trailRef.current = trailRef.current.filter(p => p.alpha > 0.01);
     };
 
-    // Draw mouse glow with enhanced effect
-    const drawMouseOrb = () => {
-      if (!showMouseGlow) return;
-
-      const { x, y } = mouseRef.current;
-      
-      // Pulsing effect
-      const pulse = Math.sin(Date.now() * 0.003) * 0.2 + 0.8;
-      
-      // Multiple glow layers for depth
-      for (let i = 0; i < 3; i++) {
-        const radius = (300 - i * 80) * pulse;
-        const intensity = (0.2 - i * 0.05) * mouseGlowIntensity;
-        
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        gradient.addColorStop(0, `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${intensity})`);
-        gradient.addColorStop(0.5, `rgba(${secondary.r}, ${secondary.g}, ${secondary.b}, ${intensity * 0.5})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
-      }
-
-      // Draw glowing ring at mouse position
-      ctx.beginPath();
-      ctx.arc(x, y, 30 * pulse, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${0.4 * pulse})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(x, y, 50 * pulse, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${secondary.r}, ${secondary.g}, ${secondary.b}, ${0.2 * pulse})`;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    };
-
-    // Update particles with stronger mouse interaction
+    // Draw connections with mouse enhancement
     const updateParticles = () => {
       const { x: mouseX, y: mouseY } = mouseRef.current;
 
@@ -372,7 +344,6 @@ const InteractiveBackground = ({
 
       drawFloatingShapes(time);
       drawMouseTrail();
-      drawMouseOrb();
       updateParticles();
       drawConnections();
       drawParticles();

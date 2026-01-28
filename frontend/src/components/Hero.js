@@ -4,9 +4,22 @@ import { ArrowRight, Download, Terminal } from 'lucide-react';
 import InteractiveBackground from './InteractiveBackground';
 
 const Hero = () => {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentText, setCurrentText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            setMousePos({ x: e.clientX, y: e.clientY });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    // Subtle parallax calculation
+    const parallaxX = (mousePos.x - window.innerWidth / 2) / 40;
+    const parallaxY = (mousePos.y - window.innerHeight / 2) / 40;
 
     const words = useMemo(
         () => ["Software Engineer", "Frontend Designer", "Java Specialist", "Tech Thinker"],
@@ -63,8 +76,8 @@ const Hero = () => {
             <div className="absolute inset-0 z-0">
                 <InteractiveBackground
                     particleCount="auto"
-                    primaryColor="#3b82f6"
-                    secondaryColor="#8b5cf6"
+                    primaryColor="var(--accent-blue)"
+                    secondaryColor="var(--accent-violet)"
                     mouseGlowIntensity={0.4}
                     showFloatingShapes={false}
                     animationSpeed={0.5}
@@ -80,6 +93,7 @@ const Hero = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
+                    style={{ x: parallaxX, y: parallaxY }}
                     className="max-w-4xl mx-auto text-center"
                 >
                     {/* Badge */}

@@ -8,6 +8,7 @@ import Blog from './components/Blog';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import CustomCursor from './components/CustomCursor';
 
 function App() {
   const { scrollYProgress } = useScroll();
@@ -18,7 +19,8 @@ function App() {
   });
 
   return (
-    <div className="bg-background text-foreground min-h-screen selection:bg-accent-blue/30 overflow-x-hidden">
+    <div className="bg-background text-foreground min-h-screen selection:bg-accent-blue/30 overflow-x-hidden cursor-none">
+      <CustomCursor />
       {/* Scroll Progress Indicator */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-accent-blue origin-left z-[110]"

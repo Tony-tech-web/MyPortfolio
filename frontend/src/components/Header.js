@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, Github, Instagram, Mail } from 'lucide-react';
+import { Sun, Moon, Menu, X, Github, Instagram, Mail, Twitter, MessageCircle } from 'lucide-react';
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -129,10 +129,12 @@ const Header = () => {
                                     </a>
                                 ))}
                                 <div className="pt-6 border-t border-glass-border flex justify-between items-center text-text-muted">
-                                    <div className="flex space-x-4">
-                                        <Github size={20} className="hover:text-accent-blue transition-colors cursor-pointer" />
-                                        <Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" />
-                                        <Mail size={20} className="hover:text-accent-blue transition-colors cursor-pointer" />
+                                    <div className="flex space-x-5 text-text-muted">
+                                        <a href="https://github.com/tony-tech-web" target="_blank" rel="noreferrer"><Github size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="#" target="_blank" rel="noreferrer"><Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="#" target="_blank" rel="noreferrer"><Twitter size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="#" target="_blank" rel="noreferrer"><MessageCircle size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="mailto:tonyalidu@gmail.com"><Mail size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                     </div>
                                     <p className="text-xs">© 2026 ANTHONY</p>
                                 </div>
