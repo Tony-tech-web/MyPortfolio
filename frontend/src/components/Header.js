@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, Github, Instagram, Mail, Twitter, MessageCircle } from 'lucide-react';
+import { Sun, Moon, Menu, X, Github, Instagram, Mail, Twitter } from 'lucide-react';
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -133,7 +133,6 @@ const Header = () => {
                                         <a href="https://github.com/tony-tech-web" target="_blank" rel="noreferrer"><Github size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                         <a href="https://www.instagram.com/immnot_tony/" target="_blank" rel="noreferrer"><Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                         <a href="https://x.com/AliduTony" target="_blank" rel="noreferrer"><Twitter size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="#" target="_blank" rel="noreferrer"><MessageCircle size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                         <a href="mailto:tonyalidu@gmail.com"><Mail size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                     </div>
                                     <p className="text-xs">© 2026 ANTHONY</p>
