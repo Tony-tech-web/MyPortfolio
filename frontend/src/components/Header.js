@@ -53,10 +53,21 @@ const Header = () => {
                         href="#home"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-xl font-bold tracking-tighter flex items-center gap-1 group"
+                        className="flex items-center gap-3 group"
                     >
-                        <span className="text-foreground transition-colors duration-300 group-hover:text-accent-blue">ANTHONY</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse"></span>
+                        <div className="relative w-11 h-11 flex items-center justify-center glass-surface rounded-full overflow-hidden border border-white/10 shadow-lg">
+                            <img 
+                                src="/logo.png" 
+                                alt="Logo" 
+                                className="w-full h-full object-cover scale-[1.3] transition-transform duration-500 group-hover:scale-[1.4]"
+                            />
+                            {/* Inner glow for circle */}
+                            <div className="absolute inset-0 bg-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xl font-bold tracking-tighter text-foreground group-hover:text-accent-blue transition-colors">ANTHONY</span>
+                            <span className="text-[8px] font-mono tracking-[0.3em] uppercase text-text-muted opacity-50">Portfolio</span>
+                        </div>
                     </motion.a>
 
                     {/* Desktop Nav */}

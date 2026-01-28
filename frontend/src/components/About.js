@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { User, Quote, MapPin, GraduationCap, Briefcase, Zap } from 'lucide-react';
+import { Quote, MapPin, GraduationCap, Briefcase, Zap } from 'lucide-react';
 
 const About = () => {
   const { scrollYProgress } = useScroll();
@@ -41,8 +41,12 @@ const About = () => {
               <div className="absolute -inset-4 bg-gradient-to-tr from-accent-blue/20 to-accent-violet/20 rounded-[40px] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative glass-surface rounded-[32px] overflow-hidden p-2">
                 <div className="aspect-[4/5] bg-surface-900 rounded-[28px] overflow-hidden flex items-center justify-center relative">
-                   {/* Placeholder for real image or avatar - Using a stylized character/icon for now */}
-                   <User size={120} className="text-white/10" />
+                   <img 
+                     src="/profile.jpg" 
+                     alt="Alidu Anthony" 
+                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                     style={{ objectPosition: 'center 15%' }}
+                   />
                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
                    <div className="absolute bottom-8 left-8 right-8 text-center lg:text-left">
                      <p className="text-xs font-mono tracking-widest text-accent-blue uppercase mb-2">Principal</p>
