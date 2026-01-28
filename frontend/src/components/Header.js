@@ -131,8 +131,8 @@ const Header = () => {
                                 <div className="pt-6 border-t border-glass-border flex justify-between items-center text-text-muted">
                                     <div className="flex space-x-5 text-text-muted">
                                         <a href="https://github.com/tony-tech-web" target="_blank" rel="noreferrer"><Github size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="#" target="_blank" rel="noreferrer"><Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="#" target="_blank" rel="noreferrer"><Twitter size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="https://www.instagram.com/immnot_tony/" target="_blank" rel="noreferrer"><Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
+                                        <a href="https://x.com/AliduTony" target="_blank" rel="noreferrer"><Twitter size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                         <a href="#" target="_blank" rel="noreferrer"><MessageCircle size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                         <a href="mailto:tonyalidu@gmail.com"><Mail size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
                                     </div>

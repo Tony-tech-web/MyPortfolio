@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mail, Send, Github, Linkedin, Instagram, MapPin, CheckCircle2 } from 'lucide-react';
+import { Mail, Send, Github, Twitter, Instagram, MapPin, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {
@@ -94,6 +94,8 @@ const Contact = () => {
                             {[
                                 { icon: <Mail size={20} />, label: 'Direct Email', value: 'tonyalidu@gmail.com', href: 'mailto:tonyalidu@gmail.com' },
                                 { icon: <Github size={20} />, label: 'Source Control', value: 'github.com/tony-tech-web', href: 'https://github.com/tony-tech-web' },
+                                { icon: <Twitter size={20} />, label: 'Twitter / X', value: '@AliduTony', href: 'https://x.com/AliduTony' },
+                                { icon: <Instagram size={20} />, label: 'Instagram', value: '@immnot_tony', href: 'https://www.instagram.com/immnot_tony/' },
                                 { icon: <MapPin size={20} />, label: 'Current Base', value: 'Abuja, Nigeria', href: null },
                             ].map((item, i) => (
                                 <motion.div 

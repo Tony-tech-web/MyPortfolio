@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Instagram, ArrowUp } from 'lucide-react';
+import { Github, Twitter, Mail, Instagram, ArrowUp } from 'lucide-react';
 
 const Footer = () => {
     const scrollToTop = () => {
@@ -9,9 +9,9 @@ const Footer = () => {
 
     const socialLinks = [
         { icon: <Github size={20} />, href: 'https://github.com/tony-tech-web', label: 'GitHub' },
-        { icon: <Linkedin size={20} />, href: 'https://linkedin.com/in/alidu-anthony', label: 'LinkedIn' },
+        { icon: <Twitter size={20} />, href: 'https://x.com/AliduTony', label: 'Twitter' },
         { icon: <Mail size={20} />, href: 'mailto:tonyalidu@gmail.com', label: 'Email' },
-        { icon: <Instagram size={20} />, href: 'https://instagram.com/', label: 'Instagram' }
+        { icon: <Instagram size={20} />, href: 'https://www.instagram.com/immnot_tony/', label: 'Instagram' }
     ];
 
     return (
