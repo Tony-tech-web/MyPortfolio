@@ -81,3 +81,80 @@ html {
     display: block;
   }
 }
+
+/* 3D Model Container Styles */
+.model-3d-container {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  height: 320px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .model-3d-container {
+    width: 384px;
+    height: 384px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .model-3d-container {
+    display: none;
+  }
+}
+
+/* Ensure 3D canvas doesn't interfere with interactions */
+.model-3d-container canvas {
+  pointer-events: none;
+}
+
+/* Smooth transitions for 3D elements */
+.model-3d-container,
+.animated-background-3d {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Loading state for 3D models */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.model-loader {
+  animation: spin 1s linear infinite;
+}
+
+/* Hero fade-in animations */
+.hero-fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover scale effect */
+.hover-scale {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale:active {
+  transform: scale(0.95);
+}

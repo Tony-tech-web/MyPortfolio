@@ -1,230 +1,210 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Mail, Send, Github, Linkedin, Instagram, MapPin, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {
-  const sectionRef = useRef(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [status, setStatus] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [status, setStatus] = useState('');
+    const [loading, setLoading] = useState(false);
+    
+    const { scrollYProgress } = useScroll();
+    const yForm = useTransform(scrollYProgress, [0.8, 1], [0, -50]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
-    const reveals = sectionRef.current.querySelectorAll('.reveal');
-    reveals.forEach((el) => observer.observe(el));
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setStatus('');
 
-    return () => observer.disconnect();
-  }, []);
+        try {
+            const web3Key = (process.env.REACT_APP_WEB3FORMS_KEY || '').trim();
+            if (!web3Key) throw new Error('Configuration missing: Contact system key.');
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    access_key: web3Key,
+                    ...formData,
+                    subject: `New Collaboration Inquiry from ${formData.name}`,
+                })
+            });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setStatus('');
+            const result = await response.json();
 
-    try {
-      // Send to Web3Forms
-      const web3KeyRaw = process.env.REACT_APP_WEB3FORMS_KEY || '';
-      const web3Key = web3KeyRaw.trim();
-      if (!web3Key || !/^[0-9a-f-]{36}$/i.test(web3Key)) {
-        throw new Error('Invalid Web3Forms key format. Check your REACT_APP_WEB3FORMS_KEY.');
-      }
-      const payload = {
-        access_key: web3Key,
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
-        subject: `Portfolio Contact from ${formData.name}`,
-        from_name: 'Portfolio Website',
-        replyto: formData.email,
-        botcheck: ''
-      };
-
-      const web3Response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      const web3Result = await web3Response.json();
-
-      if (web3Result.success) {
-        // Also save to backend database
-        const apiUrl = process.env.REACT_APP_API_URL;
-        if (apiUrl && apiUrl.trim().length > 0) {
-          try {
-            const base = apiUrl.replace(/\/$/, '');
-            await axios.post(`${base}/api/contact`, formData);
-          } catch (dbError) {
-            console.log('Backend save failed, but Web3Forms worked');
-          }
+            if (result.success) {
+                setStatus('SUCCESS');
+                setFormData({ name: '', email: '', message: '' });
+                
+                const apiUrl = process.env.REACT_APP_API_URL;
+                if (apiUrl) {
+                    try {
+                        await axios.post(`${apiUrl.replace(/\/$/, '')}/api/contact`, formData);
+                    } catch (e) {
+                        console.log('Database sync bypassed.');
+                    }
+                }
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            setStatus('ERROR');
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-        setStatus('Message sent successfully! I\'ll get back to you soon.');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        throw new Error(web3Result.message || 'Failed to send message via Web3Forms');
-      }
-    } catch (error) {
-      console.error('Web3Forms error:', error);
-      setStatus(error?.message || 'Failed to send message. Please try again later.');
-      setFormData({ name: '', email: '', message: '' });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  return (
-    <section id="contact" ref={sectionRef} className="py-20">
-      <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 reveal">
-            Get In <span className="gradient-text">Touch</span>
-          </h2>
+    return (
+        <section id="contact" className="section-padding bg-background relative overflow-hidden">
+            <div className="container mx-auto px-6 relative z-10">
+                <div className="flex flex-col lg:flex-row gap-20">
+                    
+                    {/* Content Side */}
+                    <div className="w-full lg:w-1/2">
+                        <motion.span 
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="text-accent-blue font-mono text-xs tracking-widest uppercase mb-4 block"
+                        >
+                            Connection
+                        </motion.span>
+                        <motion.h2 
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-tight"
+                        >
+                            Let's start a <br />
+                            <span className="gradient-heading">Collaboration.</span>
+                        </motion.h2>
+                        
+                        <motion.p 
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            className="text-text-muted text-lg leading-relaxed max-w-md mb-12"
+                        >
+                            Whether you have a specific project in mind or just want to explore technical possibilities, I’m always open to high-impact opportunities.
+                        </motion.p>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="reveal">
-              <h3 className="text-2xl font-semibold mb-6">Let's Work Together</h3>
-              <p className="text-gray-300 mb-6">
-                I'm always interested in new opportunities, whether it's a full-time position,
-                freelance project, or just a friendly chat about technology.
-              </p>
-              <p className="text-gray-300 mb-6">
-                Feel free to reach out if you have a project in mind, want to collaborate,
-                or just want to say hello!
-              </p>
+                        <div className="space-y-8">
+                            {[
+                                { icon: <Mail size={20} />, label: 'Direct Email', value: 'tonyalidu@gmail.com', href: 'mailto:tonyalidu@gmail.com' },
+                                { icon: <Github size={20} />, label: 'Source Control', value: 'github.com/tony-tech-web', href: 'https://github.com/tony-tech-web' },
+                                { icon: <MapPin size={20} />, label: 'Current Base', value: 'Abuja, Nigeria', href: null },
+                            ].map((item, i) => (
+                                <motion.div 
+                                    key={i}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="flex items-center gap-6"
+                                >
+                                    <div className="p-4 rounded-2xl glass-surface text-accent-blue">
+                                        {item.icon}
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-mono tracking-widest text-text-muted uppercase mb-1">{item.label}</p>
+                                        {item.href ? (
+                                            <a href={item.href} target="_blank" rel="noreferrer" className="text-lg font-semibold hover:text-accent-blue transition-colors">
+                                                {item.value}
+                                            </a>
+                                        ) : (
+                                            <p className="text-lg font-semibold">{item.value}</p>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <i className="fas fa-envelope text-blue-400 mr-3 w-5"></i>
-                  <a href="mailto:tonyalidu@gmail.com" className="text-gray-300 hover:text-blue-400 transition-colors">
-                    tonyalidu@gmail.com
-                  </a>
+                    {/* Form Side */}
+                    <div className="w-full lg:w-1/2">
+                        <motion.div 
+                            style={{ y: yForm }}
+                            className="relative"
+                        >
+                            <div className="absolute -inset-10 bg-accent-blue/5 rounded-full blur-[100px] pointer-events-none" />
+                            
+                            <form onSubmit={handleSubmit} className="relative glass-surface p-8 md:p-12 rounded-[40px] border-white/5 space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Identity</label>
+                                        <input 
+                                            type="text" 
+                                            name="name" 
+                                            required 
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            placeholder="Your Name"
+                                            className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Email Address</label>
+                                        <input 
+                                            type="email" 
+                                            name="email" 
+                                            required 
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="email@example.com"
+                                            className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Message</label>
+                                    <textarea 
+                                        name="message" 
+                                        required 
+                                        rows="5"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        placeholder="How can we build together?"
+                                        className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20 resize-none"
+                                    />
+                                </div>
+
+                                <motion.button
+                                    whileHover={{ scale: 1.01 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    disabled={loading || status === 'SUCCESS'}
+                                    className={`w-full py-5 rounded-2xl font-bold tracking-tight text-white transition-all flex items-center justify-center gap-3 overflow-hidden group ${
+                                        status === 'SUCCESS' ? 'bg-emerald-500' : 'bg-accent-blue hover:bg-blue-600'
+                                    }`}
+                                >
+                                    {loading ? (
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    ) : status === 'SUCCESS' ? (
+                                        <>
+                                            <CheckCircle2 size={20} />
+                                            <span>Inquiry Dispatched</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                            <span>Send Inquiry</span>
+                                        </>
+                                    )}
+                                </motion.button>
+
+                                {status === 'ERROR' && (
+                                    <p className="text-center text-xs text-rose-400 font-mono tracking-widest uppercase animate-pulse">
+                                        Transmission failed. Please try again.
+                                    </p>
+                                )}
+                            </form>
+                        </motion.div>
+                    </div>
+
                 </div>
-                <div className="flex items-center">
-                  <i className="fab fa-github text-blue-400 mr-3 w-5"></i>
-                  <a
-                    href="https://github.com/tony-tech-web"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                  >
-                    github.com/tony-tech-web
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i className="fab fa-linkedin text-blue-400 mr-3 w-5"></i>
-                  <a
-                    href="https://linkedin.com/in/alidu-anthony"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                  >
-                    linkedin.com/in/alidu-anthony
-                  </a>
-                </div>
-              </div>
             </div>
-
-            <div className="reveal">
-              <form onSubmit={handleSubmit} className="glass-card p-8">
-                <div className="form-group">
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="form-input"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="form-input"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows="5"
-                    className="form-input form-textarea"
-                    placeholder="Tell me about your project or just say hello!"
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center">
-                      <i className="fas fa-spinner fa-spin mr-2"></i>
-                      Sending...
-                    </span>
-                  ) : (
-                    'Send Message'
-                  )}
-                </button>
-
-                {status && (
-                  <div className={`mt-4 p-3 rounded-lg text-center ${
-                    status.includes('successfully')
-                      ? 'bg-green-600/20 text-green-400'
-                      : 'bg-red-600/20 text-red-400'
-                  }`}>
-                    {status}
-                  </div>
-                )}
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default Contact;
