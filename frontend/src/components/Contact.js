@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Send, Github, Twitter, Instagram, MapPin, CheckCircle2, Terminal } from 'lucide-react';
+import { Mail, Send, Github, Twitter, MapPin, CheckCircle2, Terminal } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {

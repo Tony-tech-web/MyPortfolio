@@ -1,20 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Terminal, Command } from 'lucide-react';
+import { ArrowRight, Download, Command } from 'lucide-react';
 
 const Hero = () => {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentText, setCurrentText] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
-
-    useEffect(() => {
-        const handleMouseMove = (e) => {
-            setMousePos({ x: e.clientX, y: e.clientY });
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
 
     const words = useMemo(
         () => ["Software Engineer", "Systems Architect", "Java Specialist", "UI/UX Artisan"],

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Quote, MapPin, GraduationCap, Briefcase, Zap, Shield } from 'lucide-react';
+import { Quote, MapPin, GraduationCap, Briefcase, Shield } from 'lucide-react';
 
 const About = () => {
   const stats = [
