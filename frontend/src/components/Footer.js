@@ -8,80 +8,82 @@ const Footer = () => {
     };
 
     const socialLinks = [
-        { icon: <Github size={20} />, href: 'https://github.com/tony-tech-web', label: 'GitHub' },
-        { icon: <Twitter size={20} />, href: 'https://x.com/AliduTony', label: 'Twitter' },
-        { icon: <Mail size={20} />, href: 'mailto:tonyalidu@gmail.com', label: 'Email' },
-        { icon: <Instagram size={20} />, href: 'https://www.instagram.com/immnot_tony/', label: 'Instagram' }
+        { icon: <Github size={16} />, href: 'https://github.com/tony-tech-web', label: 'GitHub' },
+        { icon: <Twitter size={16} />, href: 'https://x.com/AliduTony', label: 'Twitter' },
+        { icon: <Mail size={16} />, href: 'mailto:tonyalidu@gmail.com', label: 'Email' },
+        { icon: <Instagram size={16} />, href: 'https://www.instagram.com/immnot_tony/', label: 'Instagram' }
     ];
 
     return (
-        <footer className="relative py-20 bg-background overflow-hidden border-t border-white/5">
+        <footer className="relative py-20 bg-background border-t border-white/5 overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-12">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-20">
                     
-                    <div className="flex flex-col items-center md:items-start group">
+                    <div className="flex flex-col items-start group max-w-sm">
                         <motion.a 
                             href="#home"
-                            className="flex items-center gap-3 mb-4"
+                            className="flex items-center gap-4 mb-8"
                         >
-                            <div className="w-16 h-16 glass-surface rounded-full flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:border-accent-blue/30 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] border border-white/10">
-                                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover scale-[1.3] transition-transform duration-500 group-hover:scale-[1.4]" />
+                            <div className="w-12 h-12 border border-white/10 overflow-hidden flex items-center justify-center grayscale group-hover:grayscale-0 transition-all">
+                                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover scale-150" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-2xl font-bold tracking-tighter text-foreground group-hover:text-accent-blue transition-colors">ANTHONY</span>
-                                <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-text-muted opacity-50">Main Office</span>
+                                <span className="text-xl font-bold tracking-tighter uppercase italic">Anthony.</span>
+                                <span className="terminal-label text-[8px] text-accent-primary font-bold tracking-widest uppercase">AUTH :: SYSTEM_END</span>
                             </div>
                         </motion.a>
-                        <p className="text-text-muted text-sm font-mono tracking-widest uppercase opacity-50">
-                            Digital Craftsman / Engineer
+                        <p className="text-text-muted text-sm font-light leading-relaxed mb-8">
+                            Architecting high-performance digital systems for the next era of technical excellence.
                         </p>
-                    </div>
-
-                    {/* Navigation */}
-                    <nav className="flex flex-wrap justify-center gap-8 text-xs font-mono tracking-[0.2em] uppercase text-text-muted">
-                        <a href="#about" className="hover:text-foreground transition-colors">About</a>
-                        <a href="#skills" className="hover:text-foreground transition-colors">Skills</a>
-                        <a href="#projects" className="hover:text-foreground transition-colors">Projects</a>
-                        <a href="#blog" className="hover:text-foreground transition-colors">Blog</a>
-                        <a href="#contact" className="hover:text-foreground transition-colors">Contact</a>
-                    </nav>
-
-                    {/* Socials & Scroll */}
-                    <div className="flex items-center gap-6">
-                        <div className="flex gap-4">
+                        <div className="flex gap-6">
                             {socialLinks.map((social, i) => (
-                                <motion.a
+                                <a
                                     key={i}
                                     href={social.href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    whileHover={{ y: -3, scale: 1.1 }}
-                                    className="p-3 rounded-full glass-surface text-text-muted hover:text-accent-blue transition-colors"
+                                    className="text-zinc-500 hover:text-accent-primary transition-colors duration-300"
                                     title={social.label}
                                 >
                                     {social.icon}
-                                </motion.a>
+                                </a>
                             ))}
                         </div>
-                        
-                        <motion.button
-                            onClick={scrollToTop}
-                            whileHover={{ y: -5 }}
-                            className="p-4 rounded-full bg-foreground text-background hover:bg-accent-blue hover:text-white transition-all duration-300"
-                        >
-                            <ArrowUp size={20} />
-                        </motion.button>
+                    </div>
+
+                    {/* Navigation Columns */}
+                    <div className="grid grid-cols-2 gap-20">
+                        <div className="flex flex-col gap-4">
+                            <span className="terminal-label text-zinc-600 mb-2">Navigation</span>
+                            <a href="#about" className="text-xs font-mono text-zinc-400 hover:text-fg transition-colors">About_Me</a>
+                            <a href="#skills" className="text-xs font-mono text-zinc-400 hover:text-fg transition-colors">Technical_Stack</a>
+                            <a href="#projects" className="text-xs font-mono text-zinc-400 hover:text-fg transition-colors">Case_Studies</a>
+                        </div>
+                        <div className="flex flex-col gap-4">
+                            <span className="terminal-label text-zinc-600 mb-2">Connect</span>
+                            <a href="#blog" className="text-xs font-mono text-zinc-400 hover:text-fg transition-colors">System_Updates</a>
+                            <a href="#contact" className="text-xs font-mono text-zinc-400 hover:text-fg transition-colors">Uplink_Channel</a>
+                            <button onClick={scrollToTop} className="text-xs font-mono text-accent-primary hover:text-fg transition-colors flex items-center gap-2">
+                                <ArrowUp size={12} /> Return_Home
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-[10px] font-mono tracking-[0.3em] uppercase text-text-muted/40 text-center">
-                        © {new Date().getFullYear()} Alidu Anthony. All rights reserved.
-                    </p>
-                    <div className="flex items-center gap-3 text-[10px] font-mono tracking-[0.3em] uppercase text-text-muted/40">
-                        <span>Built with Precision</span>
-                        <div className="w-6 h-px bg-current" />
-                        <span>V1.0.0</span>
+                <div className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex flex-col md:flex-row items-center gap-4 text-[10px] font-mono tracking-[0.3em] uppercase text-zinc-600">
+                        <span>© {new Date().getFullYear()} Alidu Anthony</span>
+                        <span className="hidden md:block opacity-20">{"//"}</span>
+                        <span>Designed_for_Performance</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-6 text-[10px] font-mono tracking-[0.3em] uppercase text-zinc-600">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-accent-primary animate-pulse" />
+                            <span>System_Online</span>
+                        </div>
+                        <span className="opacity-20">{"//"}</span>
+                        <span>V2.0.42</span>
                     </div>
                 </div>
             </div>

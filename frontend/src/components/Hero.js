@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Terminal } from 'lucide-react';
-import InteractiveBackground from './InteractiveBackground';
+import { ArrowRight, Download, Terminal, Command } from 'lucide-react';
 
 const Hero = () => {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -17,18 +16,14 @@ const Hero = () => {
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
-    // Subtle parallax calculation
-    const parallaxX = (mousePos.x - window.innerWidth / 2) / 40;
-    const parallaxY = (mousePos.y - window.innerHeight / 2) / 40;
-
     const words = useMemo(
-        () => ["Software Engineer", "Frontend Designer", "Java Specialist", "Tech Thinker"],
+        () => ["Software Engineer", "Systems Architect", "Java Specialist", "UI/UX Artisan"],
         []
     );
 
     useEffect(() => {
         const currentWord = words[currentWordIndex];
-        let delay = isDeleting ? 40 : 80;
+        let delay = isDeleting ? 30 : 60;
 
         if (!isDeleting && currentText === currentWord) {
             delay = 3000;
@@ -62,7 +57,7 @@ const Hero = () => {
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 10 },
         visible: {
             opacity: 1,
             y: 0,
@@ -72,105 +67,112 @@ const Hero = () => {
 
     return (
         <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-            {/* Background Layer */}
-            <div className="absolute inset-0 z-0">
-                <InteractiveBackground
-                    particleCount="auto"
-                    primaryColor="var(--accent-blue)"
-                    secondaryColor="var(--accent-violet)"
-                    mouseGlowIntensity={0.4}
-                    showFloatingShapes={false}
-                    animationSpeed={0.5}
-                />
-            </div>
-            
-            {/* Ambient Background Elements */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent-blue/5 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-violet/5 rounded-full blur-[120px] pointer-events-none" />
+            {/* Tech Glows */}
+            <div className="tech-glow top-[-200px] left-[-200px]" />
+            <div className="tech-glow bottom-[-200px] right-[-200px]" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%)' }} />
 
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div 
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    style={{ x: parallaxX, y: parallaxY }}
-                    className="max-w-4xl mx-auto text-center"
+                    className="max-w-4xl mx-auto"
                 >
-                    {/* Badge */}
+                    {/* Status Bar */}
                     <motion.div 
                         variants={itemVariants}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface border-white/5 text-xs font-mono tracking-widest text-accent-blue uppercase mb-8"
+                        className="flex items-center gap-4 mb-8 border-l-2 border-accent-primary pl-6"
                     >
-                        <Terminal size={12} />
-                        <span>Ready to build the future</span>
+                        <div className="flex flex-col">
+                            <span className="terminal-label">System Status</span>
+                            <span className="text-xs font-mono text-zinc-500">v2.0 // STABLE // PRODUCTION_READY</span>
+                        </div>
+                        <div className="h-8 w-px bg-white/5 mx-2" />
+                        <div className="flex flex-col">
+                            <span className="terminal-label">Last Upload</span>
+                            <span className="text-xs font-mono text-zinc-500">2024.02.09.1934</span>
+                        </div>
                     </motion.div>
 
-                    {/* Main Heading */}
-                    <motion.h1 
-                        variants={itemVariants}
-                        className="text-5xl md:text-8xl font-bold tracking-tight mb-8 leading-[1.1]"
-                    >
-                        Design. <span className="gradient-heading">Code.</span> <br />
-                        Deploy <span className="text-accent-blue italic font-serif">Impact.</span>
-                    </motion.h1>
-
-                    {/* Subheading / Identity */}
-                    <motion.div 
-                        variants={itemVariants}
-                        className="flex flex-col items-center gap-4 mb-12"
-                    >
-                        <p className="text-xl md:text-2xl text-text-muted font-medium">
-                            I am Alidu Anthony — <span className="text-foreground">{currentText}</span>
-                            <span className="cursor ml-1"></span>
-                        </p>
-                        <p className="max-w-xl text-lg text-text-muted leading-relaxed">
-                            Crafting high-performance digital experiences where aesthetics meet technical excellence.
-                        </p>
-                    </motion.div>
-
-                    {/* CTAs */}
-                    <motion.div 
-                        variants={itemVariants}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-6"
-                    >
-                        <a 
-                            href="#projects" 
-                            className="w-full sm:w-auto px-8 py-4 rounded-full bg-accent-blue text-white font-semibold flex items-center justify-center gap-2 group hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-blue-500/20"
-                        >
-                            Explore Work
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                        </a>
+                    {/* Main Identity */}
+                    <div className="mb-12">
+                        <motion.div variants={itemVariants} className="flex items-center gap-3 mb-4">
+                            <span className="w-12 h-px bg-zinc-800" />
+                            <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">Engineering Registry</span>
+                        </motion.div>
                         
-                        <div className="flex items-center gap-4">
-                            <a 
-                                href="#contact"
-                                className="px-6 py-4 text-sm font-semibold text-foreground hover:text-accent-blue transition-colors"
-                            >
-                                Let's collaborate
+                        <motion.h1 
+                            variants={itemVariants}
+                            className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 leading-[0.85]"
+                        >
+                            ALIDU <br />
+                            <span className="text-accent-primary">ANTHONY.</span>
+                        </motion.h1>
+
+                        <motion.div variants={itemVariants} className="flex items-center gap-4 py-2 border-y border-white/5">
+                            <span className="terminal-label text-[12px]">{currentText}</span>
+                            <div className="w-2 h-4 bg-accent-primary animate-pulse" />
+                        </motion.div>
+                    </div>
+
+                    {/* Descriptive Text & CTAs */}
+                    <div className="flex flex-col md:flex-row items-end justify-between gap-12">
+                        <motion.p 
+                            variants={itemVariants}
+                            className="max-w-md text-lg text-text-muted font-light leading-relaxed"
+                        >
+                            Architecting high-performance digital systems where technical precision meets high-end minimalism. 
+                        </motion.p>
+
+                        <motion.div 
+                            variants={itemVariants}
+                            className="flex items-center gap-4"
+                        >
+                            <a href="#projects" className="btn-primary group h-12">
+                                <Command size={14} />
+                                View Work
+                                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                             </a>
+                            
+                            <a href="#contact" className="btn-outline h-12">
+                                Start Session
+                            </a>
+                            
                             <a 
                                 href={(process.env.PUBLIC_URL || '') + '/Alidu Anthony - Curriculum Vitae.pdf'}
                                 download
-                                className="p-3 rounded-full glass-surface hover:bg-white/10 transition-colors group"
-                                title="Download CV"
+                                className="w-12 h-12 terminal-panel flex items-center justify-center hover:bg-white/5 transition-all group"
+                                title="Download Dossier"
                             >
-                                <Download size={20} className="group-hover:-translate-y-0.5 transition-transform" />
+                                <Download size={18} className="group-hover:-translate-y-0.5 transition-transform" />
                             </a>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </motion.div>
             </div>
 
-            {/* Scroll Indicator */}
-            <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-            >
-                <span className="text-[10px] font-mono tracking-[0.3em] uppercase opacity-30">Scroll</span>
-                <div className="w-px h-12 bg-gradient-to-b from-accent-blue to-transparent" />
-            </motion.div>
+            {/* Terminal Decorations */}
+            <div className="absolute top-1/2 right-10 -translate-y-1/2 hidden xl:flex flex-col gap-8 opacity-20 pointer-events-none">
+                <div className="flex flex-col items-end">
+                    <span className="terminal-label">Core_Temp</span>
+                    <span className="font-mono text-[10px]">32.4°C</span>
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className="terminal-label">Uptime</span>
+                    <span className="font-mono text-[10px]">99.9%</span>
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className="terminal-label">Thread_Load</span>
+                    <span className="font-mono text-[10px] text-accent-primary">OPTIMAL</span>
+                </div>
+            </div>
+
+            {/* Bottom Coordinates */}
+            <div className="absolute bottom-10 left-10 hidden md:block">
+                <span className="text-[10px] font-mono opacity-20 uppercase tracking-[0.5em]">
+                    LAT: 9.0765° N // LONG: 7.3986° E
+                </span>
+            </div>
         </section>
     );
 };

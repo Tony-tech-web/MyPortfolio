@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Mail, Send, Github, Twitter, Instagram, MapPin, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Mail, Send, Github, Twitter, Instagram, MapPin, CheckCircle2, Terminal } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
-    
-    const { scrollYProgress } = useScroll();
-    const yForm = useTransform(scrollYProgress, [0.8, 1], [0, -50]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,146 +57,132 @@ const Contact = () => {
     };
 
     return (
-        <section id="contact" className="section-padding bg-background relative overflow-hidden">
+        <section id="contact" className="section-padding bg-background relative border-t border-white/5">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="flex flex-col lg:flex-row gap-20">
                     
-                    {/* Content Side */}
+                    {/* Channel Info Side */}
                     <div className="w-full lg:w-1/2">
-                        <motion.span 
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            className="text-accent-blue font-mono text-xs tracking-widest uppercase mb-4 block"
-                        >
-                            Connection
-                        </motion.span>
-                        <motion.h2 
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-tight"
-                        >
-                            Let's start a <br />
-                            <span className="gradient-heading">Collaboration.</span>
-                        </motion.h2>
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-8 h-px bg-accent-primary" />
+                            <span className="terminal-label">Communication_Interface</span>
+                        </div>
                         
-                        <motion.p 
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            className="text-text-muted text-lg leading-relaxed max-w-md mb-12"
-                        >
-                            Whether you have a specific project in mind or just want to explore technical possibilities, I’m always open to high-impact opportunities.
-                        </motion.p>
+                        <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mb-12 leading-[0.9]">
+                            Let's start a <br />
+                            <span className="text-accent-primary italic">Collaboration.</span>
+                        </h2>
+                        
+                        <p className="text-text-muted text-lg font-light leading-relaxed mb-16 max-w-md">
+                            Transmitting projects, ideas, or architectural inquiries. I respond to high-fidelity opportunities within 24 cycles.
+                        </p>
 
-                        <div className="space-y-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                             {[
-                                { icon: <Mail size={20} />, label: 'Direct Email', value: 'tonyalidu@gmail.com', href: 'mailto:tonyalidu@gmail.com' },
-                                { icon: <Github size={20} />, label: 'Source Control', value: 'github.com/tony-tech-web', href: 'https://github.com/tony-tech-web' },
-                                { icon: <Twitter size={20} />, label: 'Twitter / X', value: '@AliduTony', href: 'https://x.com/AliduTony' },
-                                { icon: <Instagram size={20} />, label: 'Instagram', value: '@immnot_tony', href: 'https://www.instagram.com/immnot_tony/' },
-                                { icon: <MapPin size={20} />, label: 'Current Base', value: 'Abuja, Nigeria', href: null },
+                                { icon: <Mail size={18} />, label: 'Standard_Email', value: 'tonyalidu@gmail.com', href: 'mailto:tonyalidu@gmail.com' },
+                                { icon: <Github size={18} />, label: 'Source_Control', value: 'tony-tech-web', href: 'https://github.com/tony-tech-web' },
+                                { icon: <Twitter size={18} />, label: 'Relay_X', value: '@AliduTony', href: 'https://x.com/AliduTony' },
+                                { icon: <MapPin size={18} />, label: 'Node_Location', value: 'Abuja, Nigeria', href: null },
                             ].map((item, i) => (
-                                <motion.div 
-                                    key={i}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="flex items-center gap-6"
-                                >
-                                    <div className="p-4 rounded-2xl glass-surface text-accent-blue">
-                                        {item.icon}
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-mono tracking-widest text-text-muted uppercase mb-1">{item.label}</p>
-                                        {item.href ? (
-                                            <a href={item.href} target="_blank" rel="noreferrer" className="text-lg font-semibold hover:text-accent-blue transition-colors">
-                                                {item.value}
-                                            </a>
-                                        ) : (
-                                            <p className="text-lg font-semibold">{item.value}</p>
-                                        )}
-                                    </div>
-                                </motion.div>
+                                <div key={i} className="flex flex-col gap-2">
+                                    <span className="terminal-label text-zinc-600 font-bold">{item.label}</span>
+                                    {item.href ? (
+                                        <a href={item.href} target="_blank" rel="noreferrer" className="text-sm font-mono text-zinc-400 hover:text-accent-primary transition-colors flex items-center gap-2">
+                                            {item.icon} {item.value}
+                                        </a>
+                                    ) : (
+                                        <p className="text-sm font-mono text-zinc-400 flex items-center gap-2">
+                                            {item.icon} {item.value}
+                                        </p>
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* Form Side */}
+                    {/* Uplink Form Side */}
                     <div className="w-full lg:w-1/2">
                         <motion.div 
-                            style={{ y: yForm }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
                             className="relative"
                         >
-                            <div className="absolute -inset-10 bg-accent-blue/5 rounded-full blur-[100px] pointer-events-none" />
-                            
-                            <form onSubmit={handleSubmit} className="relative glass-surface p-8 md:p-12 rounded-[40px] border-white/5 space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Identity</label>
+                            <form onSubmit={handleSubmit} className="terminal-panel p-8 md:p-12 space-y-8">
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="terminal-label text-accent-primary">New_Transmission</span>
+                                    <Terminal size={14} className="text-zinc-800" />
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="space-y-1">
+                                        <label className="terminal-label text-zinc-600 block">Ident_Value</label>
                                         <input 
                                             type="text" 
                                             name="name" 
                                             required 
                                             value={formData.name}
                                             onChange={handleChange}
-                                            placeholder="Your Name"
-                                            className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20"
+                                            placeholder="ENTER NAME"
+                                            className="w-full terminal-panel px-6 py-4 font-mono text-sm text-fg outline-none focus:border-accent-primary/50 transition-all placeholder:text-text-muted/50"
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Email Address</label>
+                                    <div className="space-y-1">
+                                        <label className="terminal-label text-zinc-600 block">Email_Address</label>
                                         <input 
                                             type="email" 
                                             name="email" 
                                             required 
                                             value={formData.email}
                                             onChange={handleChange}
-                                            placeholder="email@example.com"
-                                            className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20"
+                                            placeholder="USER@DOMAIN.COM"
+                                            className="w-full terminal-panel px-6 py-4 font-mono text-sm text-fg outline-none focus:border-accent-primary/50 transition-all placeholder:text-text-muted/50"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="terminal-label text-zinc-600 block">Input_Message</label>
+                                        <textarea 
+                                            name="message" 
+                                            required 
+                                            rows="4"
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            placeholder="DESCRIBE_COLLABORATION_PARAMETERS..."
+                                            className="w-full terminal-panel px-6 py-4 font-mono text-sm text-fg outline-none focus:border-accent-primary/50 transition-all placeholder:text-text-muted/50 resize-none uppercase"
                                         />
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-mono tracking-widest text-text-muted uppercase ml-2">Message</label>
-                                    <textarea 
-                                        name="message" 
-                                        required 
-                                        rows="5"
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        placeholder="How can we build together?"
-                                        className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/5 focus:border-accent-blue/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20 resize-none"
-                                    />
-                                </div>
 
-                                <motion.button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.98 }}
+                                <button
                                     disabled={loading || status === 'SUCCESS'}
-                                    className={`w-full py-5 rounded-2xl font-bold tracking-tight text-white transition-all flex items-center justify-center gap-3 overflow-hidden group ${
-                                        status === 'SUCCESS' ? 'bg-emerald-500' : 'bg-accent-blue hover:bg-blue-600'
+                                    className={`btn-primary w-full ${
+                                        status === 'SUCCESS' ? 'bg-emerald-600 hover:bg-emerald-600' : ''
                                     }`}
                                 >
                                     {loading ? (
-                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        <span className="animate-pulse">SYNCHRONIZING...</span>
                                     ) : status === 'SUCCESS' ? (
-                                        <>
-                                            <CheckCircle2 size={20} />
-                                            <span>Inquiry Dispatched</span>
-                                        </>
+                                        <div className="flex items-center gap-2">
+                                            <CheckCircle2 size={14} />
+                                            <span>TRANSMISSION_COMPLETE</span>
+                                        </div>
                                     ) : (
-                                        <>
-                                            <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                            <span>Send Inquiry</span>
-                                        </>
+                                        <div className="flex items-center gap-2">
+                                            <Send size={14} />
+                                            <span>INITIATE_UPLINK</span>
+                                        </div>
                                     )}
-                                </motion.button>
+                                </button>
 
                                 {status === 'ERROR' && (
-                                    <p className="text-center text-xs text-rose-400 font-mono tracking-widest uppercase animate-pulse">
-                                        Transmission failed. Please try again.
+                                    <p className="text-center font-mono text-[10px] text-rose-500 uppercase tracking-widest animate-pulse">
+                                        Checksum fail. Connection lost.
                                     </p>
                                 )}
                             </form>
+
+                            {/* Decorative Grid Accent */}
+                            <div className="absolute -bottom-4 -right-4 w-24 h-24 border-r border-b border-accent-primary/20 pointer-events-none" />
                         </motion.div>
                     </div>
 

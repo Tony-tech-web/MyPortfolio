@@ -46,7 +46,7 @@ const CustomCursor = () => {
         <div className="fixed inset-0 pointer-events-none z-[9999] hidden lg:block">
             {/* Precision Dot */}
             <motion.div
-                className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent-blue rounded-full"
+                className="fixed top-0 left-0 w-1 h-1 bg-accent-primary"
                 style={{
                     x: mouseX,
                     y: mouseY,
@@ -55,15 +55,17 @@ const CustomCursor = () => {
                 }}
             />
             
-            {/* Interactive Ring */}
+            {/* Technical Crosshair / Ring */}
             <motion.div
-                className="fixed top-0 left-0 border border-accent-blue/30 rounded-full bg-white/5 backdrop-blur-[2px]"
+                className="fixed top-0 left-0 border border-accent-primary/20"
                 animate={{
-                    width: isPointer ? 60 : 32,
-                    height: isPointer ? 60 : 32,
-                    opacity: isHovered ? 0.8 : 0.4,
-                    scale: isHovered ? 0.9 : 1,
+                    width: isPointer ? 48 : 24,
+                    height: isPointer ? 48 : 24,
+                    opacity: isHovered ? 0.8 : 0.3,
+                    scale: isHovered ? 0.95 : 1,
+                    rotate: isPointer ? 45 : 0,
                 }}
+                transition={{ duration: 0.3 }}
                 style={{
                     x: ringX,
                     y: ringY,

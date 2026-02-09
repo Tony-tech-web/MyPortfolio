@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X, Github, Instagram, Mail, Twitter } from 'lucide-react';
+import { Sun, Moon, Menu, X, Terminal } from 'lucide-react';
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -33,11 +33,6 @@ const Header = () => {
         { name: 'Contact', href: '#contact' },
     ];
 
-    const menuVariants = {
-        closed: { opacity: 0, scale: 0.95, y: -20 },
-        open: { opacity: 1, scale: 1, y: 0 }
-    };
-
     return (
         <header 
             className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
@@ -45,108 +40,86 @@ const Header = () => {
             }`}
         >
             <nav className="container mx-auto px-6">
-                <div className={`relative flex items-center justify-between px-6 py-3 rounded-full transition-all duration-500 ${
-                    isScrolled ? 'glass-surface shadow-2xl' : 'bg-transparent'
+                <div className={`flex items-center justify-between px-8 py-4 transition-all duration-500 border-x border-white/5 ${
+                    isScrolled ? 'bg-background/80 backdrop-blur-md border-y' : 'bg-transparent'
                 }`}>
-                    {/* Logo */}
+                    {/* Brand */}
                     <motion.a 
                         href="#home"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-3 group"
+                        className="flex items-center gap-4 group"
                     >
-                        <div className="relative w-11 h-11 flex items-center justify-center glass-surface rounded-full overflow-hidden border border-white/10 shadow-lg">
-                            <img 
-                                src="/logo.png" 
-                                alt="Logo" 
-                                className="w-full h-full object-cover scale-[1.3] transition-transform duration-500 group-hover:scale-[1.4]"
-                            />
-                            {/* Inner glow for circle */}
-                            <div className="absolute inset-0 bg-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative w-10 h-10 border border-white/10 overflow-hidden flex items-center justify-center transition-all">
+                            <img src="/logo.png" alt="Logo" className="w-full h-full object-cover scale-150" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xl font-bold tracking-tighter text-foreground group-hover:text-accent-blue transition-colors">ANTHONY</span>
-                            <span className="text-[8px] font-mono tracking-[0.3em] uppercase text-text-muted opacity-50">Portfolio</span>
+                            <span className="text-lg font-bold tracking-tighter uppercase italic">Anthony.</span>
+                            <span className="terminal-label text-[8px] text-accent-primary font-bold tracking-widest uppercase">AUTH :: REGISTRY</span>
                         </div>
                     </motion.a>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    {/* Desktop Command Center */}
+                    <div className="hidden md:flex items-center space-x-12">
                         {navLinks.map((link, i) => (
-                            <motion.a
+                            <a
                                 key={link.name}
                                 href={link.href}
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                className="text-sm font-medium text-text-muted hover:text-foreground transition-colors relative group"
+                                className="text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-500 hover:text-accent-primary transition-colors relative group"
                             >
                                 {link.name}
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent-blue transition-all duration-300 group-hover:w-full"></span>
-                            </motion.a>
+                                <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent-primary transition-all duration-300 group-hover:w-full"></span>
+                            </a>
                         ))}
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center space-x-3">
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full glass-surface hover:bg-white/10 text-foreground transition-colors"
-                        >
-                            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                        </motion.button>
+                    {/* Interface Controls */}
+                    <div className="flex items-center space-x-6">
+                        <button onClick={toggleTheme} className="text-zinc-500 hover:text-fg transition-colors">
+                            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                        </button>
                         
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 rounded-full glass-surface text-foreground"
-                        >
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-fg">
                             {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-                        </motion.button>
-
-                        <motion.a
-                            href="#contact"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className="hidden md:flex items-center justify-center px-5 py-2 rounded-full bg-foreground text-background text-sm font-semibold hover:bg-accent-blue hover:text-white transition-all duration-300"
-                        >
-                            Let's Talk
-                        </motion.a>
+                        </button>
+                        
+                        <a href="#contact" className="hidden md:flex items-center gap-2 terminal-label text-fg hover:text-accent-primary transition-colors">
+                            <Terminal size={12} />
+                            Init_Session
+                        </a>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* Mobile Comms Overlay */}
                 <AnimatePresence>
                     {isMobileMenuOpen && (
                         <motion.div
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                            variants={menuVariants}
-                            className="absolute top-full left-6 right-6 mt-4 p-6 glass-surface rounded-3xl md:hidden overflow-hidden"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            className="fixed inset-y-0 right-0 w-full max-w-sm bg-background border-l border-white/5 z-[110] p-12 flex flex-col justify-center"
                         >
-                            <div className="flex flex-col space-y-6">
+                            <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-12 right-12 text-zinc-500">
+                                <X size={24} />
+                            </button>
+                            
+                            <div className="space-y-12">
                                 {navLinks.map((link) => (
                                     <a
                                         key={link.name}
                                         href={link.href}
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className="text-2xl font-semibold text-foreground hover:text-accent-blue transition-colors"
+                                        className="block text-5xl font-bold tracking-tighter hover:text-accent-primary transition-colors"
                                     >
-                                        {link.name}
+                                        {link.name}.
                                     </a>
                                 ))}
-                                <div className="pt-6 border-t border-glass-border flex justify-between items-center text-text-muted">
-                                    <div className="flex space-x-5 text-text-muted">
-                                        <a href="https://github.com/tony-tech-web" target="_blank" rel="noreferrer"><Github size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="https://www.instagram.com/immnot_tony/" target="_blank" rel="noreferrer"><Instagram size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="https://x.com/AliduTony" target="_blank" rel="noreferrer"><Twitter size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                        <a href="mailto:tonyalidu@gmail.com"><Mail size={20} className="hover:text-accent-blue transition-colors cursor-pointer" /></a>
-                                    </div>
-                                    <p className="text-xs">© 2026 ANTHONY</p>
+                            </div>
+
+                            <div className="mt-20 pt-12 border-t border-white/5">
+                                <span className="terminal-label block mb-6">Active_Nodes</span>
+                                <div className="flex gap-8 text-zinc-500 text-xs font-mono">
+                                    <a href="https://github.com/tony-tech-web" target="_blank" rel="noreferrer" className="hover:text-fg transition-colors">GH</a>
+                                    <a href="https://x.com/AliduTony" target="_blank" rel="noreferrer" className="hover:text-fg transition-colors">TW</a>
+                                    <a href="https://www.instagram.com/immnot_tony/" target="_blank" rel="noreferrer" className="hover:text-fg transition-colors">IG</a>
                                 </div>
                             </div>
                         </motion.div>
