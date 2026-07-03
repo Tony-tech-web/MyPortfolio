@@ -15,14 +15,13 @@ const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Ic
             className="group relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-[40px] border border-white/5 bg-zinc-950 transition-all duration-700"
         >
             {/* Background Image / Action Layer */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <div 
-                    className="absolute inset-0 opacity-40 group-hover:opacity-80 transition-all duration-1000 scale-150 group-hover:scale-100"
-                    style={{
-                        background: `radial-gradient(circle at 50% 50%, ${statusColor}30 0%, transparent 60%)`
-                    }}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src={image} 
+                    alt={name} 
+                    className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:scale-110 group-hover:brightness-75 transition-all duration-1000"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
             </div>
 
             {/* Immersive Fluid Slider (Reference to User Image 1) */}
@@ -48,7 +47,7 @@ const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Ic
             </div>
 
             {/* Immersive UI Overlays */}
-            <div className="absolute inset-0 p-10 z-10 flex flex-col justify-end">
+            <div className="absolute inset-0 p-8 md:p-10 z-10 flex flex-col justify-end">
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md">
@@ -61,24 +60,16 @@ const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Ic
                         {name}
                     </h3>
                     
-                    <p className="text-sm font-mono text-zinc-500 uppercase tracking-widest border-l border-accent-primary pl-4">
+                    <p className="text-sm font-mono text-zinc-500 uppercase tracking-widest border-l border-accent-primary pl-4 mb-4">
                         {role}
                     </p>
 
-                    <AnimatePresence>
-                        {isHovered && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="overflow-hidden"
-                            >
-                                <p className="text-zinc-400 text-sm font-light leading-relaxed mt-4 max-w-[80%]">
-                                    {description}
-                                </p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {/* Description is now permanently visible */}
+                    <div className="overflow-hidden">
+                        <p className="text-zinc-300 text-sm md:text-base font-light leading-relaxed max-w-[90%]">
+                            {description}
+                        </p>
+                    </div>
                 </div>
             </div>
 

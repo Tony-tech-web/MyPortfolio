@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, ExternalLink, Star, GitFork, Terminal, FileText, ChevronDown } from 'lucide-react';
+import { Github, ExternalLink, Star, GitFork, Terminal, FileText, X } from 'lucide-react';
 
 const GITHUB_USER = 'tony-tech-web';
 
@@ -31,133 +31,20 @@ const LANG_COLORS = {
   Rust:       '#dea584',
 };
 
-const ProjectCard = ({ repo, index, expanded, onToggle }) => {
-  const [readme, setReadme] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleToggle = async () => {
-    onToggle();
-    if (!expanded && readme === null) {
-      setLoading(true);
-      try {
-        let res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/main/README.md`);
-        if (!res.ok) {
-          res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/master/README.md`);
-        }
-        setReadme(res.ok ? stripMarkdown(await res.text()) : '');
-      } catch {
-        setReadme('');
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      className={`relative border border-white/5 transition-all duration-500 cursor-pointer overflow-hidden ${
-        expanded ? 'col-span-1 sm:col-span-2 lg:col-span-3 bg-zinc-950/80 shadow-2xl scale-[1.01] z-10' : 'bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent-primary/30 z-0'
-      }`}
-      onClick={handleToggle}
-    >
-      <div className="absolute top-0 right-0 w-8 h-px bg-gradient-to-l from-accent-primary/30 to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 h-8 w-px bg-gradient-to-b from-accent-primary/30 to-transparent pointer-events-none" />
-
-      {/* Header */}
-      <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="terminal-label text-[9px] text-zinc-600 tracking-[0.2em]">
-              PROJ-{String(index + 1).padStart(2, '0')}
-            </span>
-          </div>
-          <motion.h3 layout="position" className={`font-bold tracking-tight truncate transition-all ${expanded ? 'text-xl md:text-2xl text-accent-primary mb-2' : 'text-sm md:text-base text-white mb-3'}`}>
-            {repo.name.replace(/-/g, '_')}
-          </motion.h3>
-          <div className="flex items-center gap-4 text-zinc-600 flex-wrap">
-            <span className="flex items-center gap-1 text-[10px] font-mono">
-              <Star size={9} className="text-zinc-500" /> {repo.stargazers_count}
-            </span>
-            <span className="flex items-center gap-1 text-[10px] font-mono">
-              <GitFork size={9} className="text-zinc-500" /> {repo.forks_count}
-            </span>
-            {repo.language && (
-              <span className="flex items-center gap-1.5 text-[10px] font-mono">
-                <span
-                  className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0"
-                  style={{ background: LANG_COLORS[repo.language] || '#555' }}
-                />
-                {repo.language}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all rounded-md">
-            <Github size={14} />
-          </a>
-          {repo.homepage && (
-            <a href={repo.homepage} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all rounded-md">
-              <ExternalLink size={14} />
-            </a>
-          )}
-          <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.3 }} className="p-2 text-zinc-600 ml-2">
-            <ChevronDown size={14} />
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Expanded Content */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="border-t border-white/5 bg-black/20"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6 md:p-8">
-              {repo.description && (
-                <p className="text-sm font-mono text-zinc-400 italic mb-6 pb-6 border-b border-white/5">
-                  {repo.description}
-                </p>
-              )}
-              
-              <div className="flex items-center gap-2 mb-4">
-                <FileText size={12} className="text-accent-primary" />
-                <span className="terminal-label text-[10px] text-accent-primary tracking-widest">README.md</span>
-              </div>
-              
-              {loading ? (
-                <div className="space-y-3">
-                  {[75, 55, 85, 45, 65].map((w, i) => (
-                    <div key={i} className="h-1.5 bg-white/5 animate-pulse rounded" style={{ width: `${w}%` }} />
-                  ))}
-                </div>
-              ) : (
-                <pre className="text-[11px] md:text-xs font-mono text-zinc-400 leading-relaxed whitespace-pre-wrap break-words max-h-80 overflow-y-auto custom-scrollbar pr-2">
-                  {readme || '// No README found — repository undocumented.'}
-                </pre>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
-
 const Projects = () => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedId, setExpandedId] = useState(null);
+  const [selectedRepo, setSelectedRepo] = useState(null);
+  const [readme, setReadme] = useState('');
+  const [readmeLoading, setReadmeLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -186,9 +73,32 @@ const Projects = () => {
     fetchRepos();
   }, []);
 
+  const handleSelectRepo = async (repo) => {
+    if (selectedRepo?.id === repo.id) {
+      if (isMobile) setSelectedRepo(null); // Toggle off on mobile
+      return;
+    }
+    
+    setSelectedRepo(repo);
+    setReadmeLoading(true);
+    setReadme('');
+    
+    try {
+      let res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/main/README.md`);
+      if (!res.ok) {
+        res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/master/README.md`);
+      }
+      setReadme(res.ok ? stripMarkdown(await res.text()) : '');
+    } catch {
+      setReadme('');
+    } finally {
+      setReadmeLoading(false);
+    }
+  };
+
   return (
-    <section id="projects" className="section-padding bg-background relative">
-      <div className="container mx-auto px-6">
+    <section id="projects" className="section-padding bg-background relative overflow-hidden">
+      <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -201,35 +111,161 @@ const Projects = () => {
             </h2>
           </div>
           <p className="text-text-muted max-w-xs text-base font-light leading-relaxed">
-            Live repositories — sorted by interactions. Click any card to expand inline.
+            Live repositories — sorted by interactions. Select a project to view its architecture.
           </p>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-32 border border-white/5 bg-white/[0.02] animate-pulse rounded-xl" />
-            ))}
-          </div>
-        ) : (
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {repos.map((repo, i) => (
-              <ProjectCard 
-                key={repo.id} 
-                repo={repo} 
-                index={i} 
-                expanded={expandedId === repo.id}
-                onToggle={() => setExpandedId(expandedId === repo.id ? null : repo.id)}
-              />
-            ))}
-          </motion.div>
-        )}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 min-h-[600px] relative">
+          
+          {/* Left Side: Vertical List of Cards */}
+          <div className={`flex flex-col gap-4 transition-all duration-500 ease-in-out ${selectedRepo && !isMobile ? 'lg:w-1/3' : 'w-full lg:w-1/2'}`}>
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-28 border border-white/5 bg-white/[0.02] animate-pulse rounded-xl" />
+              ))
+            ) : (
+              repos.map((repo, i) => {
+                const isSelected = selectedRepo?.id === repo.id;
+                
+                return (
+                  <motion.div
+                    key={repo.id}
+                    layout="position"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
+                    onClick={() => handleSelectRepo(repo)}
+                    className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden ${
+                      isSelected 
+                        ? 'border-accent-primary bg-accent-primary/5 shadow-[0_0_30px_rgba(255,85,0,0.1)] scale-[1.02] z-10' 
+                        : 'border-white/5 bg-zinc-950/50 hover:bg-white/[0.02] hover:border-white/20'
+                    }`}
+                  >
+                    {isSelected && (
+                        <motion.div 
+                            layoutId="active-project-highlight"
+                            className="absolute left-0 top-0 bottom-0 w-1 bg-accent-primary shadow-[0_0_15px_rgba(255,85,0,0.8)]"
+                        />
+                    )}
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className={`terminal-label text-[9px] tracking-[0.2em] ${isSelected ? 'text-accent-primary' : 'text-zinc-600'}`}>
+                                    PROJ-{String(i + 1).padStart(2, '0')}
+                                </span>
+                            </div>
+                            <h3 className={`font-bold tracking-tight truncate transition-colors duration-300 ${isSelected ? 'text-white text-xl' : 'text-zinc-300 text-lg'}`}>
+                                {repo.name.replace(/-/g, '_')}
+                            </h3>
+                            <div className="flex items-center gap-4 text-zinc-500 flex-wrap mt-3">
+                                {repo.language && (
+                                <span className="flex items-center gap-1.5 text-[10px] font-mono">
+                                    <span
+                                    className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0"
+                                    style={{ background: LANG_COLORS[repo.language] || '#555' }}
+                                    />
+                                    {repo.language}
+                                </span>
+                                )}
+                                <span className="flex items-center gap-1 text-[10px] font-mono">
+                                <Star size={9} /> {repo.stargazers_count}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
 
-        <div className="mt-12 flex justify-center">
-          <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer" className="btn-outline group">
-            <Terminal size={14} className="group-hover:text-accent-primary" />
-            Access Repository Archive
-          </a>
+            <div className="mt-8 flex justify-start">
+                <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer" className="btn-outline group text-sm py-3 px-6">
+                    <Terminal size={14} className="group-hover:text-accent-primary" />
+                    Access Repository Archive
+                </a>
+            </div>
+          </div>
+
+          {/* Right Side: Bubble Info Expansion */}
+          <AnimatePresence mode="wait">
+            {selectedRepo && (
+                <motion.div
+                    key={selectedRepo.id}
+                    initial={{ opacity: 0, scale: 0.95, x: 20 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, x: 20 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className={`fixed inset-4 z-50 lg:static lg:inset-auto lg:z-auto ${isMobile ? 'flex items-center justify-center' : 'flex-1 lg:w-2/3 lg:block'}`}
+                >
+                    {/* Mobile Backdrop */}
+                    {isMobile && (
+                        <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-background/90 backdrop-blur-sm -z-10"
+                            onClick={() => setSelectedRepo(null)}
+                        />
+                    )}
+
+                    <div className="w-full h-full lg:h-auto max-h-[85vh] lg:max-h-none overflow-hidden flex flex-col bg-zinc-950/90 backdrop-blur-2xl border border-accent-primary/20 rounded-[32px] shadow-2xl lg:sticky lg:top-32 relative">
+                        {/* Header */}
+                        <div className="p-8 border-b border-white/5 bg-white/[0.01] flex justify-between items-start gap-4">
+                            <div>
+                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+                                    {selectedRepo.name}
+                                </h3>
+                                {selectedRepo.description && (
+                                    <p className="text-sm font-mono text-zinc-400 italic">
+                                        {selectedRepo.description}
+                                    </p>
+                                )}
+                            </div>
+                            
+                            <div className="flex items-center gap-2 shrink-0">
+                                <a href={selectedRepo.html_url} target="_blank" rel="noopener noreferrer" className="p-3 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary hover:bg-accent-primary/10 transition-all rounded-xl">
+                                    <Github size={18} />
+                                </a>
+                                {selectedRepo.homepage && (
+                                    <a href={selectedRepo.homepage} target="_blank" rel="noopener noreferrer" className="p-3 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary hover:bg-accent-primary/10 transition-all rounded-xl">
+                                        <ExternalLink size={18} />
+                                    </a>
+                                )}
+                                {isMobile && (
+                                    <button onClick={() => setSelectedRepo(null)} className="p-3 text-zinc-400 hover:text-white rounded-xl bg-white/5">
+                                        <X size={18} />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Body (README) */}
+                        <div className="p-8 overflow-y-auto custom-scrollbar flex-1 lg:max-h-[600px] relative">
+                            <div className="flex items-center gap-2 mb-6 sticky top-0 bg-zinc-950/90 backdrop-blur pb-4 z-10 border-b border-white/5">
+                                <FileText size={14} className="text-accent-primary" />
+                                <span className="terminal-label text-xs text-accent-primary tracking-widest">SYSTEM_README.md</span>
+                            </div>
+                            
+                            {readmeLoading ? (
+                                <div className="space-y-4">
+                                    {[75, 55, 85, 45, 65, 80, 40].map((w, i) => (
+                                        <div key={i} className="h-2 bg-white/5 animate-pulse rounded-full" style={{ width: `${w}%` }} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <pre className="text-xs md:text-sm font-mono text-zinc-400 leading-relaxed whitespace-pre-wrap break-words">
+                                    {readme || '// No documentation found for this module.'}
+                                </pre>
+                            )}
+                            
+                            {/* Decorative Grid */}
+                            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] pointer-events-none" />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
       </div>
     </section>
