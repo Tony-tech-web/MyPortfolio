@@ -5,18 +5,21 @@ const Timeline = () => {
     const events = [
         {
             year: "2024",
-            title: "Engineering Portfolio V2.1",
-            desc: "Architected a fully decoupled, dynamic portfolio driven entirely by live GitHub and Blogger APIs. Implemented advanced framer-motion UI mechanics."
+            title: "Portfolio API & Dynamic Ecosystem",
+            built: "Architected a fully decoupled, dynamic portfolio driven entirely by live GitHub and Blogger APIs with advanced Framer Motion UI mechanics.",
+            learned: "Mastered API rate-limiting, complex state synchronization, and building resilient async data pipelines in React."
         },
         {
             year: "2023",
             title: "Project Orbit",
-            desc: "Engineered an AI-powered study and planning system. Built the full-stack architecture mapping logic to optimized schedules."
+            built: "Engineered an AI-powered study and planning system connecting LLM responses to a structured PostgreSQL database.",
+            learned: "Learned deep system design, prompt engineering pipelines, and handling non-deterministic AI outputs in a production environment."
         },
         {
             year: "2022",
             title: "Foundation & Academics",
-            desc: "Began deep-dive into software engineering principles, algorithms, and system design concepts. Built core fundamentals."
+            built: "Built core algorithmic fundamentals, low-level data structures, and baseline object-oriented applications.",
+            learned: "Grasped the importance of time complexity, memory management, and why robust architecture matters before writing code."
         }
     ];
 
@@ -45,10 +48,21 @@ const Timeline = () => {
                             
                             <div className="md:pl-10">
                                 <span className="font-mono text-xs text-accent-primary tracking-widest block mb-2">{event.year}</span>
-                                <h3 className="text-xl font-bold mb-2 text-white">{event.title}</h3>
-                                <p className="text-sm font-light text-text-muted leading-relaxed max-w-xl">
-                                    {event.desc}
-                                </p>
+                                <h3 className="text-xl font-bold mb-4 text-white">{event.title}</h3>
+                                <div className="space-y-3">
+                                    <div>
+                                        <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-1">What I Built</span>
+                                        <p className="text-sm font-light text-text-muted leading-relaxed max-w-xl border-l border-white/10 pl-3">
+                                            {event.built}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest block mb-1 mt-4">What I Learned</span>
+                                        <p className="text-sm font-light text-accent-primary/80 leading-relaxed max-w-xl border-l border-accent-primary/30 pl-3">
+                                            {event.learned}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
                     ))}

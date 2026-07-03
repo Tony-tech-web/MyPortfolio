@@ -133,12 +133,12 @@ const Hero = () => {
                         >
                             <a href="#projects" className="btn-primary group h-12">
                                 <Command size={14} />
-                                View Work
+                                View Flagship Project
                                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                             </a>
                             
-                            <a href="#contact" className="btn-outline h-12">
-                                Start Session
+                            <a href="https://github.com/tony-tech-web" target="_blank" rel="noopener noreferrer" className="btn-outline h-12">
+                                GitHub / Resume
                             </a>
                             
                             <a 

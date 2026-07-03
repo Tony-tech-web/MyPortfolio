@@ -39,11 +39,10 @@ const CARD_DATA = [
 const Card = ({ data, isFront, setCards, index, isMobile }) => {
   const x = useMotionValue(0);
   
-  // Stacking offset. 
   // Desktop: Stacked on the right, slightly offset to show depth.
   // Mobile: Stacked vertically.
   
-  const desktopXOffset = index * -20; // Fan slightly to the left so they stay on screen
+  const desktopXOffset = index * 20; // Fan slightly to the right to avoid overlapping text
   const desktopYOffset = index * -15; // Fan upwards slightly
   const desktopScale = 1 - index * 0.05;
   
@@ -120,8 +119,8 @@ const ProofStack = () => {
     <section className="py-24 md:py-32 bg-background relative overflow-hidden flex flex-col justify-center min-h-[80vh]">
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-background via-background to-transparent z-10" />
 
-      <div className="container mx-auto px-6 relative z-20 max-w-6xl">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20">
+      <div className="container mx-auto px-6 relative z-20 max-w-5xl">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             
           {/* Left Side: Dynamic Writeup */}
           <div className="w-full md:w-5/12 order-2 md:order-1 flex flex-col justify-center">
@@ -156,7 +155,7 @@ const ProofStack = () => {
           </div>
 
           {/* Right Side: Stacked Cards */}
-          <div className="w-full md:w-1/2 order-1 md:order-2 relative h-[400px] md:h-[460px] flex justify-center md:justify-start perspective-1000">
+          <div className="w-full md:w-1/2 order-1 md:order-2 relative h-[400px] md:h-[460px] flex justify-center perspective-1000">
             <div className="relative w-[300px] md:w-[340px] h-full">
                 <AnimatePresence>
                 {cards.map((card, index) => (

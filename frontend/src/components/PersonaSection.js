@@ -10,37 +10,17 @@ const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Ic
             viewport={{ once: true }}
             className="group relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-[40px] border border-white/5 bg-zinc-950 transition-all duration-700"
         >
-            {/* Background Image / Action Layer */}
-            <div className="absolute inset-0 z-0">
-                <img 
-                    src={image} 
-                    alt={name} 
-                    className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:scale-110 group-hover:brightness-75 transition-all duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-            </div>
-
-            {/* Immersive Fluid Slider (Reference to User Image 1) */}
-            <div className="absolute top-10 left-10 right-10 z-20">
-                <div className="relative h-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full overflow-hidden">
-                    <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${progress}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="absolute h-full left-0 top-0 bg-gradient-to-r from-accent-primary to-orange-400 rounded-full flex items-center justify-end px-4 group-hover:shadow-[0_0_20px_rgba(255,85,0,0.5)] transition-all"
-                    >
-                        <span className="text-[10px] font-bold text-white/80">{progress}%</span>
-                    </motion.div>
-                </div>
-            </div>
-
-            {/* Status Indicator */}
-            <div className="absolute top-10 right-10 z-30">
+            {/* Background Layer */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <div 
-                    className={`w-3 h-3 rounded-full animate-pulse-slow shadow-[0_0_15px_${statusColor}]`}
-                    style={{ backgroundColor: statusColor }}
+                    className="absolute inset-0 opacity-40 transition-all duration-1000"
+                    style={{
+                        background: `radial-gradient(circle at 50% 50%, ${statusColor}20 0%, transparent 70%)`
+                    }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20" />
             </div>
+
 
             {/* Immersive UI Overlays */}
             <div className="absolute inset-0 p-8 md:p-10 z-10 flex flex-col justify-end">
