@@ -130,7 +130,7 @@ const Hero = () => {
                             </a>
                             
                             <a 
-                                href={(process.env.PUBLIC_URL || '') + '/Anthony_Alidu_CV.pdf'}
+                                href={(process.env.PUBLIC_URL || '') + '/Alidu%20Anthony%20-%20Curriculum%20Vitae.pdf'}
                                 download
                                 className="w-12 h-12 terminal-panel flex items-center justify-center hover:bg-white/5 transition-all group"
                                 title="Download Dossier"
