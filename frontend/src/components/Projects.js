@@ -56,13 +56,7 @@ const CASE_STUDIES = [
     }
 ];
 
-const LANG_COLORS = {
-  Java: '#b07219',
-  JavaScript: '#f7df1e',
-  React: '#61dafb',
-  'Node.js': '#339933',
-  PostgreSQL: '#336791',
-};
+
 
 const Projects = () => {
   const [selectedRepo, setSelectedRepo] = useState(null);
