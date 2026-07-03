@@ -69,8 +69,8 @@ const Contact = () => {
                         </div>
                         
                         <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mb-12 leading-[0.9]">
-                            Let's start a <br />
-                            <span className="text-accent-primary italic">Collaboration.</span>
+                            Let's build <br />
+                            <span className="text-accent-primary italic">systems together.</span>
                         </h2>
                         
                         <p className="text-text-muted text-lg font-light leading-relaxed mb-16 max-w-md">

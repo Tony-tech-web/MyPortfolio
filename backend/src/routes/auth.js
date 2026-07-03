@@ -1,29 +1,67 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Joi = require('joi');
+const { z } = require('zod');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/auth');
+const { registry, bearerAuth } = require('../config/swagger');
 
 const router = express.Router();
 
-// Validation schemas
-const loginSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required()
-});
+// Validation schemas with OpenAPI metadata
+const loginSchema = registry.register('LoginRequest', z.object({
+  email: z.string().email().openapi({ example: 'user@example.com' }),
+  password: z.string().min(6).openapi({ example: 'password123' })
+}));
 
-const refreshSchema = Joi.object({
-  refreshToken: Joi.string().required()
+const refreshSchema = registry.register('RefreshRequest', z.object({
+  refreshToken: z.string().openapi({ description: 'The refresh token' })
+}));
+
+registry.registerPath({
+  method: 'post',
+  path: '/api/auth/login',
+  summary: 'User login',
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: loginSchema
+        }
+      }
+    }
+  },
+  responses: {
+    200: {
+      description: 'Successful login',
+      content: {
+        'application/json': {
+          schema: z.object({
+            accessToken: z.string(),
+            refreshToken: z.string(),
+            user: z.object({
+              id: z.number(),
+              username: z.string(),
+              email: z.string(),
+              role: z.string()
+            })
+          })
+        }
+      }
+    },
+    400: { description: 'Bad request' },
+    401: { description: 'Invalid credentials' }
+  }
 });
 
 // Login
 router.post('/login', async (req, res, next) => {
   try {
-    const { error } = loginSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.errors[0].message });
 
-    const { email, password } = req.body;
+    const { email, password } = parsed.data;
     const user = await User.findByEmail(email);
     
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
@@ -54,13 +92,45 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+
+registry.registerPath({
+  method: 'post',
+  path: '/api/auth/refresh',
+  summary: 'Refresh access token',
+  tags: ['Auth'],
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: refreshSchema
+        }
+      }
+    }
+  },
+  responses: {
+    200: {
+      description: 'Tokens refreshed successfully',
+      content: {
+        'application/json': {
+          schema: z.object({
+            accessToken: z.string(),
+            refreshToken: z.string()
+          })
+        }
+      }
+    },
+    400: { description: 'Bad request' },
+    403: { description: 'Invalid refresh token' }
+  }
+});
+
 // Refresh token
 router.post('/refresh', async (req, res, next) => {
   try {
-    const { error } = refreshSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
+    const parsed = refreshSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.errors[0].message });
 
-    const { refreshToken } = req.body;
+    const { refreshToken } = parsed.data;
     
     const user = await User.findByRefreshToken(refreshToken);
     if (!user) return res.status(403).json({ error: 'Invalid refresh token' });
@@ -89,6 +159,25 @@ router.post('/refresh', async (req, res, next) => {
   }
 });
 
+registry.registerPath({
+  method: 'post',
+  path: '/api/auth/logout',
+  summary: 'User logout',
+  tags: ['Auth'],
+  security: [{ [bearerAuth.name]: [] }],
+  responses: {
+    200: {
+      description: 'Logged out successfully',
+      content: {
+        'application/json': {
+          schema: z.object({ message: z.string() })
+        }
+      }
+    },
+    401: { description: 'Unauthorized' }
+  }
+});
+
 // Logout
 router.post('/logout', authenticateToken, async (req, res, next) => {
   try {
@@ -96,6 +185,30 @@ router.post('/logout', authenticateToken, async (req, res, next) => {
     res.json({ message: 'Logged out successfully' });
   } catch (err) {
     next(err);
+  }
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/auth/me',
+  summary: 'Get current user',
+  tags: ['Auth'],
+  security: [{ [bearerAuth.name]: [] }],
+  responses: {
+    200: {
+      description: 'Current user profile',
+      content: {
+        'application/json': {
+          schema: z.object({
+            id: z.number(),
+            username: z.string(),
+            email: z.string(),
+            role: z.string()
+          })
+        }
+      }
+    },
+    401: { description: 'Unauthorized' }
   }
 });
 

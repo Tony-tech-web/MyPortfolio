@@ -1,0 +1,473 @@
+# Alidu Anthony — Portfolio: Full Technical Breakdown
+
+---
+
+## 1. Project Overview
+
+This is a **full-stack personal portfolio website** for Alidu Anthony. It has evolved through two generations:
+
+| Generation | Stack | Location |
+|---|---|---|
+| **V1 (Static)** | HTML / Vanilla CSS / Vanilla JS | Root directory (`index.html`, `style.css`, `script.js`) |
+| **V2 (React App)** | React 18 / TailwindCSS / Framer Motion + Node.js Express Backend | `frontend/` + `backend/` |
+
+The **V2 React app** is what is live and deployed on **Vercel**. The static V1 files remain in the root but are no longer the primary app.
+
+---
+
+## 2. Project Directory Structure
+
+```
+A portfolio/
+├── index.html                          ← V1 Static Portfolio (legacy)
+├── style.css                           ← V1 Styles
+├── script.js                           ← V1 JavaScript
+├── Alidu Anthony - Curriculum Vitae.pdf ← Downloadable CV (served by both V1 & V2)
+├── main.jpg                            ← Profile image (V1)
+├── laryngoscope_4k_followers_celebration.glb ← 3D model asset
+├── docker-compose.yml                  ← PostgreSQL local dev container
+├── package.json                        ← Root-level scripts
+├── setup.js                            ← DB setup helper
+├── .gitignore
+│
+├── frontend/                           ← V2 React Application (Vercel-deployed)
+│   ├── public/
+│   │   ├── index.html                  ← React root HTML
+│   │   ├── Anthony_Alidu_CV.pdf        ← CV for V2 (separate copy)
+│   │   ├── logo.png
+│   │   ├── profile.jpg
+│   │   ├── model.glb                   ← 3D model for React scene
+│   │   ├── admin.html
+│   │   └── admin-dashboard.html
+│   ├── src/
+│   │   ├── App.js                      ← Root component & layout
+│   │   ├── index.js                    ← React entry point
+│   │   ├── App.css / index.css         ← Global styles
+│   │   ├── components/                 ← All UI components (12 files)
+│   │   └── pages/                      ← Page-level components (7 files)
+│   ├── .env                            ← Frontend env vars
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+│
+└── backend/                            ← Express.js REST API
+    ├── src/
+    │   ├── server.js                   ← Entry point
+    │   ├── config/
+    │   │   ├── database.js             ← PostgreSQL pool
+    │   │   ├── swagger.js              ← OpenAPI spec generator (Zod-based)
+    │   │   └── swagger-theme.css       ← Custom Swagger UI theme
+    │   ├── middleware/
+    │   │   ├── auth.js                 ← JWT verify + role guard
+    │   │   └── errorHandler.js         ← Global error handler
+    │   ├── models/
+    │   │   ├── User.js
+    │   │   ├── Project.js
+    │   │   ├── BlogPost.js
+    │   │   └── Contact.js
+    │   └── routes/
+    │       ├── auth.js
+    │       ├── projects.js
+    │       ├── blog.js
+    │       ├── contact.js
+    │       └── users.js
+    ├── schema.sql                      ← PostgreSQL schema
+    ├── seed-db.js                      ← Seed data script
+    ├── init-db.js                      ← DB init script
+    ├── .env                            ← Backend env vars
+    └── package.json
+```
+
+---
+
+## 3. Frontend (V2 React App)
+
+### Tech Stack
+| Package | Version | Purpose |
+|---|---|---|
+| `react` | 18.2.0 | Core UI framework |
+| `framer-motion` | 12.29.2 | Animations & scroll effects |
+| `@react-three/fiber` | 8.x | 3D WebGL rendering |
+| `@react-three/drei` | 9.x | 3D scene helpers |
+| `three` | 0.164.1 | WebGL 3D engine |
+| `axios` | 1.4.0 | HTTP client for API calls |
+| `lucide-react` | 0.563.0 | Icon library |
+| `tailwindcss` | 3.3.2 | Utility CSS framework |
+| `@vercel/analytics` | 1.6.1 | Vercel analytics tracking |
+
+### App Layout (App.js)
+The root component assembles the full page in this order:
+1. CustomCursor — custom animated mouse cursor
+2. Scroll progress bar (Framer Motion useScroll)
+3. GridBackground — animated background grid
+4. Header
+5. Hero
+6. PersonaSection
+7. About
+8. Skills
+9. Projects
+10. Blog
+11. Contact
+12. Footer
+13. Corner watermarks: "Engineering_Profile / V2.0" and "Optimized_for_Production"
+
+### Components (detailed)
+
+#### Header.js
+- Fixed top navbar with scroll detection (backdrop blur kicks in after 20px scroll)
+- Dark/Light theme toggle — persisted in localStorage, applied via data-theme attribute on <html>
+- Nav links: About, Skills, Projects, Blog, Contact
+- Mobile side-panel menu with AnimatePresence slide-in animation
+- Social links in mobile menu: GitHub, X (Twitter), Instagram
+
+#### Hero.js
+- Typing effect cycling through: ["Software Engineer", "Systems Architect", "Java Specialist", "UI/UX Artisan"]
+- Two CTAs: "View Work" → #projects, "Start Session" → #contact
+- Download CV button → fetches Anthony_Alidu_CV.pdf from public/ via process.env.PUBLIC_URL
+- Terminal-aesthetic decorations: Core_Temp, Uptime, Thread_Load labels
+- Geographic coordinates watermark: LAT: 9.0765° N // LONG: 7.3986° E
+
+#### Contact.js
+- Form fields: name, email, message
+- Primary send: POST https://api.web3forms.com/submit with access_key from REACT_APP_WEB3FORMS_KEY
+  - Subject auto-set to: "New Collaboration Inquiry from {name}"
+- Secondary sync (optional): After Web3Forms success, POST {REACT_APP_API_URL}/api/contact to save to PostgreSQL
+  - This silently fails if the backend is offline (non-blocking)
+- Contact info displayed: tonyalidu@gmail.com, GitHub, X (@AliduTony), Location (Abuja, Nigeria)
+
+#### Blog.js
+- Fetches blog posts from the backend which proxies the Google Blogger API v3
+
+#### Projects.js
+- Fetches all projects from GET /api/projects
+
+#### Skills.js
+- Largest component (20KB) — rich animated skill showcase
+
+#### PersonaSection.js
+- A persona/identity section (unique to V2, not in V1)
+
+#### AnimatedBackground3D.js
+- Three.js 3D animated background scene
+
+#### CustomCursor.js
+- Replaces the default OS cursor with a custom animated element
+
+#### GridBackground.js
+- CSS/canvas grid overlay for the background
+
+---
+
+## 4. Backend (Express.js API)
+
+### Tech Stack
+| Package | Purpose |
+|---|---|
+| `express` | HTTP server framework |
+| `cors` | Cross-origin resource sharing |
+| `helmet` | HTTP security headers |
+| `express-rate-limit` | Rate limiting (100 req / 15 min per IP) |
+| `bcryptjs` | Password hashing |
+| `jsonwebtoken` | JWT auth (access + refresh tokens) |
+| `pg` | PostgreSQL client |
+| `zod` | Schema validation |
+| `swagger-ui-express` | API documentation UI |
+| `@asteasolutions/zod-to-openapi` | Auto-generates OpenAPI spec from Zod schemas |
+| `multer` | File upload handling |
+
+### Server Configuration (server.js)
+- Runs on port 3001 (default)
+- CORS restricted to FRONTEND_URL env var
+- Rate limit: 100 requests per 15 minutes per IP
+- Body size limit: 10MB
+- Swagger UI served at: GET /api-docs
+
+---
+
+## 5. All API Endpoints
+
+### System
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | / | None | Health check — returns "Portfolio API is running" |
+| GET | /api/health | None | Returns { status: 'OK', timestamp } |
+| GET | /api-docs | None | Interactive Swagger UI documentation |
+
+---
+
+### Auth — /api/auth
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| POST | /api/auth/login | None | Login with email + password. Returns accessToken, refreshToken, user |
+| POST | /api/auth/refresh | None | Swap a refresh token for a new access + refresh token pair |
+| POST | /api/auth/logout | Bearer JWT | Clears stored refresh token in DB |
+| GET | /api/auth/me | Bearer JWT | Returns current authenticated user profile |
+
+JWT Details:
+- Access Token: Expires in 15m (signed with JWT_SECRET)
+- Refresh Token: Expires in 7d (signed with JWT_REFRESH_SECRET)
+- Tokens use rotating refresh strategy (new refresh token issued on each /refresh call)
+
+---
+
+### Projects — /api/projects
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | /api/projects | None | Get all projects (public) |
+| GET | /api/projects/:id | None | Get single project by ID (public) |
+| POST | /api/projects | Admin JWT | Create new project |
+| PUT | /api/projects/:id | Admin JWT | Update project |
+| DELETE | /api/projects/:id | Admin JWT | Delete project |
+
+Project Schema:
+  title: string (1–100 chars)
+  description: string (10–1000 chars)
+  technologies: array of strings
+  githubUrl: URL (optional)
+  liveUrl: URL (optional)
+  imageUrl: URL (optional)
+
+---
+
+### Blog — /api/blog
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | /api/blog | None | Fetches published posts from Google Blogger API v3 |
+| GET | /api/blog/:id | None | Get single published post by ID (from DB) |
+| GET | /api/blog/admin/all | Admin JWT | Get ALL posts including drafts |
+| GET | /api/blog/admin/:id | Admin JWT | Get any post by ID including drafts |
+| POST | /api/blog | Admin JWT | Create new blog post (saves to DB) |
+| PUT | /api/blog/:id | Admin JWT | Update blog post |
+| DELETE | /api/blog/:id | Admin JWT | Delete blog post |
+
+NOTE: The public GET /api/blog route proxies Google Blogger API (not local DB).
+HTML is stripped from post content; first 300 chars used as excerpt.
+
+---
+
+### Contact — /api/contact
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| POST | /api/contact | None | Submit a contact form message (saves to DB if available) |
+| GET | /api/contact | Admin JWT | Get all contact submissions |
+| PATCH | /api/contact/:id/read | Admin JWT | Mark a contact message as read |
+| DELETE | /api/contact/:id | Admin JWT | Delete a contact message |
+
+Dual-path contact: Frontend sends via Web3Forms first (email delivery).
+On success, it also POSTs to this endpoint to persist in DB.
+If DB is offline, the backend returns 201 anyway.
+
+---
+
+### Users — /api/users
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | /api/users | Admin JWT | Get all users |
+| GET | /api/users/:id | Admin JWT | Get user by ID |
+| POST | /api/users | Admin JWT | Create new user (bcrypt hashed, salt=10) |
+| PUT | /api/users/:id | Admin JWT | Update user (username, email, role) |
+| DELETE | /api/users/:id | Admin JWT | Delete user (cannot delete yourself) |
+
+---
+
+## 6. Database (PostgreSQL)
+
+### Table: users
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL PK | |
+| username | VARCHAR(50) UNIQUE | |
+| email | VARCHAR(100) UNIQUE | |
+| password_hash | VARCHAR(255) | bcrypt hashed |
+| role | VARCHAR(20) | Default: 'admin' |
+| refresh_token | TEXT | Rotating refresh token storage |
+| created_at / updated_at | TIMESTAMP | |
+
+### Table: projects
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL PK | |
+| title | VARCHAR(100) | |
+| description | TEXT | |
+| technologies | TEXT[] | PostgreSQL array |
+| github_url | VARCHAR(255) | Nullable |
+| live_url | VARCHAR(255) | Nullable |
+| image_url | VARCHAR(255) | Nullable |
+| created_at / updated_at | TIMESTAMP | |
+
+### Table: blog_posts
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL PK | |
+| title | VARCHAR(200) | |
+| content | TEXT | |
+| excerpt | VARCHAR(300) | |
+| tags | TEXT[] | PostgreSQL array |
+| published | BOOLEAN | Default: FALSE (draft) |
+| created_at / updated_at | TIMESTAMP | |
+
+### Table: contacts
+| Column | Type | Notes |
+|---|---|---|
+| id | SERIAL PK | |
+| name | VARCHAR(100) | |
+| email | VARCHAR(100) | |
+| message | TEXT | |
+| read | BOOLEAN | Default: FALSE |
+| created_at | TIMESTAMP | |
+
+### Indexes
+- idx_projects_created_at on projects(created_at)
+- idx_blog_posts_published on blog_posts(published)
+- idx_blog_posts_created_at on blog_posts(created_at)
+- idx_contacts_created_at on contacts(created_at)
+- idx_users_email on users(email)
+
+### Local Dev Database
+Run via Docker:
+  docker-compose up -d
+  PostgreSQL on port 5432
+  DB: portfolio_db | User: portfolio_user | Pass: portfolio_password
+
+---
+
+## 7. Auth Flow
+
+POST /api/auth/login { email, password }
+  → Lookup user by email in DB
+  → bcrypt.compare(password, hash)
+  → Sign accessToken (15m) with JWT_SECRET
+  → Sign refreshToken (7d) with JWT_REFRESH_SECRET
+  → Store refreshToken in users.refresh_token column
+  → Return { accessToken, refreshToken, user }
+
+GET /api/auth/me (Authorization: Bearer {accessToken})
+  → jwt.verify(token, JWT_SECRET)
+  → Lookup user in DB
+  → Return { id, username, email, role }
+
+POST /api/auth/refresh { refreshToken }
+  → Lookup user by refresh_token in DB
+  → jwt.verify(refreshToken, JWT_REFRESH_SECRET)
+  → Issue new accessToken + refreshToken
+  → Rotate refresh_token in DB
+  → Return { accessToken, refreshToken }
+
+POST /api/auth/logout (Authorization: Bearer {accessToken})
+  → Clear refresh_token in DB for this user
+
+---
+
+## 8. Contact Form Flow
+
+1. User fills name, email, message and submits
+2. Frontend POSTs to https://api.web3forms.com/submit with access_key
+3. Web3Forms delivers email to tonyalidu@gmail.com
+4. On success → Frontend also POSTs to /api/contact (backend)
+5. Backend saves to PostgreSQL contacts table
+6. If DB offline → Backend still returns 201 (Web3Forms handled delivery)
+7. User sees "TRANSMISSION_COMPLETE"
+
+---
+
+## 9. Environment Variables
+
+### Backend (backend/.env)
+| Variable | Value | Purpose |
+|---|---|---|
+| PORT | 3001 | Server port |
+| NODE_ENV | development | Environment mode |
+| FRONTEND_URL | http://localhost:3000 | CORS allowed origin |
+| DB_HOST | localhost | PostgreSQL host |
+| DB_PORT | 5173 | PostgreSQL port ← WRONG (should be 5432) |
+| DB_NAME | portfolio_db | Database name |
+| DB_USER | portfolio_user | DB user |
+| DB_PASSWORD | portfolio_password | DB password |
+| JWT_SECRET | your_super_secret_jwt_key_here | Access token signing key |
+| JWT_EXPIRES_IN | 15m | Access token TTL |
+| JWT_REFRESH_SECRET | your_super_secret_refresh_key_here | Refresh token signing key |
+| JWT_REFRESH_EXPIRES_IN | 7d | Refresh token TTL |
+| BLOGGER_API_KEY | AIzaSyD7... | Google Blogger API key |
+| BLOGGER_BLOG_ID | your_blog_id_here | Blogger blog ID ← NOT CONFIGURED |
+| ADMIN_PASSWORD | admin123 | Seed script default password |
+
+### Frontend (frontend/.env)
+| Variable | Value | Purpose |
+|---|---|---|
+| REACT_APP_BLOGGER_API_KEY | AIzaSyD7... | Blogger API key (client-side) |
+| REACT_APP_WEB3FORMS_KEY | e21d1feb-... | Web3Forms submission key |
+| REACT_APP_API_URL | (not set) | Backend API URL ← MISSING: DB sync skipped |
+
+---
+
+## 10. External Service Connections
+
+| Service | Purpose | Connection |
+|---|---|---|
+| Web3Forms | Email delivery from contact form | POST https://api.web3forms.com/submit |
+| Google Blogger API v3 | Blog posts source | GET googleapis.com/blogger/v3/blogs/{id}/posts |
+| GitHub | Source control & social | https://github.com/Tony-tech-web |
+| X / Twitter | Social link | https://x.com/AliduTony |
+| Instagram | Social link | https://www.instagram.com/immnot_tony/ |
+| Vercel | Hosting & CI/CD deployment | Git-connected: Tony-tech-web/My-Portfolio |
+| PostgreSQL | Data persistence | pg pool via Docker locally |
+
+---
+
+## 11. Middleware Chain
+
+Every request:
+  Request
+  → helmet()             (security headers)
+  → cors()               (CORS vs FRONTEND_URL)
+  → rateLimit()          (100 req/15min/IP)
+  → express.json()       (parse JSON body, 10MB limit)
+  → express.urlencoded() (parse form body)
+  → Route Handler
+  → errorHandler()       (global catch-all)
+
+Protected routes additionally:
+  → authenticateToken()  (JWT verify → req.user)
+  → authorizeRole(['admin']) (role check)
+  → Route Handler
+
+---
+
+## 12. Known Issues
+
+ISSUE 1 — DB_PORT misconfigured
+  backend/.env has DB_PORT=5173 (Vite's default port — a typo).
+  Correct value: 5432 (PostgreSQL default).
+  Impact: Backend cannot connect to local PostgreSQL database.
+
+ISSUE 2 — Blogger Blog ID not set
+  backend/.env has BLOGGER_BLOG_ID=your_blog_id_here (placeholder).
+  Impact: GET /api/blog will throw an error for all users.
+  Fix: Set the real Blogger blog ID from your Google Blogger account.
+
+ISSUE 3 — REACT_APP_API_URL missing from frontend/.env
+  Without this variable, the contact form silently skips saving to the DB.
+  Web3Forms email still works fine.
+  Fix: Add REACT_APP_API_URL=http://localhost:3001 (dev) or your production URL.
+
+ISSUE 4 — CV exists in two separate locations
+  Root: "Alidu Anthony - Curriculum Vitae.pdf" (used by V1 HTML button)
+  frontend/public: "Anthony_Alidu_CV.pdf" (used by V2 React button)
+  These are separate files. Updating one does NOT update the other.
+  Must be kept in sync manually.
+
+## 13. V2.1 Architecture Updates (July 2026)
+
+The portfolio has been upgraded to an "Engineering Case Study Platform" following the new IA:
+
+**1. Data Flow Bypasses (Backend Deprecation Strategy):**
+- **Projects**: Now fetch live directly from the GitHub API (`/users/tony-tech-web/repos`). Sorts by interaction (stars + forks) and filters for 90-day activity. Implements interactive Framer Motion grid cards that expand to display the project's README.md as the description. No backend required.
+- **Blog**: Now fetches directly from the Google Blogger API (`/blogger/v3/blogs/.../posts`), sorting by `updated` date. Max results increased to 6. No backend required.
+- **Contact**: Submissions use Web3Forms as the primary mail delivery system. The backend database sync (`POST /api/contact`) is still present as an optional fallback but is gracefully bypassed if the backend is offline or `REACT_APP_API_URL` is missing.
+
+**2. UI & Narrative Upgrades:**
+- **Proof Stack (`ProofStack.js`)**: Added a high-impact, swipeable Framer Motion card stack immediately following the Hero section. Provides instant credibility with key "Signal Chips" before the user scrolls deep into the case studies.
+- **Hero Section (`Hero.js`)**: Updated to explicitly state "Full-stack / AI Software Engineer" and includes technical signal chips (`AI-integrated systems`, `Scalable backend design`, `React + Node production apps`).
+- **Skills Section (`Skills.js`)**: Retained the highly-animated "A Minimal Stack. Maximum Performance." design.
+
+The backend infrastructure (Express/PostgreSQL) remains available for future scaling (e.g., custom admin dashboard, auth), but the V2.1 frontend is now fully autonomous and relies entirely on robust 3rd-party APIs (GitHub, Blogger, Web3Forms) for dynamic content.

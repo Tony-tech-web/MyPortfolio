@@ -10,7 +10,12 @@ import Footer from './components/Footer';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import CustomCursor from './components/CustomCursor';
 import GridBackground from './components/GridBackground';
+import ProofStack from './components/ProofStack';
 import PersonaSection from './components/PersonaSection';
+
+import OrbitCaseStudy from './components/OrbitCaseStudy';
+import SystemThinking from './components/SystemThinking';
+import Timeline from './components/Timeline';
 
 function App() {
   const { scrollYProgress } = useScroll();
@@ -37,10 +42,14 @@ function App() {
         <Header />
         <main>
           <Hero />
+          <ProofStack />
+          <OrbitCaseStudy />
           <PersonaSection />
+          <Projects />
+          <SystemThinking />
           <About />
           <Skills />
-          <Projects />
+          <Timeline />
           <Blog />
           <Contact />
         </main>

@@ -100,9 +100,21 @@ const Hero = () => {
                             <span className="text-accent-primary">ANTHONY.</span>
                         </motion.h1>
 
-                        <motion.div variants={itemVariants} className="flex items-center gap-4 py-2 border-y border-white/5">
+                        <motion.div variants={itemVariants} className="flex items-center gap-4 py-2 border-y border-white/5 mb-6">
                             <span className="terminal-label text-[12px]">{currentText}</span>
                             <div className="w-2 h-4 bg-accent-primary animate-pulse" />
+                        </motion.div>
+
+                        <motion.div variants={itemVariants} className="flex flex-wrap gap-3 mb-8">
+                            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-zinc-300">
+                                AI-integrated systems
+                            </span>
+                            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-zinc-300">
+                                Scalable backend design
+                            </span>
+                            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-zinc-300">
+                                React + Node production apps
+                            </span>
                         </motion.div>
                     </div>
 
@@ -112,7 +124,7 @@ const Hero = () => {
                             variants={itemVariants}
                             className="max-w-md text-lg text-text-muted font-light leading-relaxed"
                         >
-                            Architecting high-performance digital systems where technical precision meets high-end minimalism. 
+                            Full-stack / AI Software Engineer architecting high-performance digital systems where technical precision meets high-end minimalism. 
                         </motion.p>
 
                         <motion.div 

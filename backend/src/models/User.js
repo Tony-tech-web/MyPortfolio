@@ -24,6 +24,29 @@ class User {
     return result.rows[0];
   }
 
+  static async findAll() {
+    const query = 'SELECT id, username, email, role, created_at FROM users ORDER BY created_at DESC';
+    const result = await pool.query(query);
+    return result.rows;
+  }
+
+  static async update(id, username, email, role) {
+    const query = `
+      UPDATE users 
+      SET username = $1, email = $2, role = $3, updated_at = NOW() 
+      WHERE id = $4
+      RETURNING id, username, email, role, created_at
+    `;
+    const result = await pool.query(query, [username, email, role, id]);
+    return result.rows[0];
+  }
+
+  static async delete(id) {
+    const query = 'DELETE FROM users WHERE id = $1 RETURNING id';
+    const result = await pool.query(query, [id]);
+    return result.rows[0];
+  }
+
   static async updateRefreshToken(id, refreshToken) {
     const query = 'UPDATE users SET refresh_token = $1, updated_at = NOW() WHERE id = $2';
     await pool.query(query, [refreshToken, id]);

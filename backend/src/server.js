@@ -2,12 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const swaggerUi = require('swagger-ui-express');
 const { pool } = require('./config/database');
+
+// Require routes FIRST to ensure all OpenAPI paths are registered
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const blogRoutes = require('./routes/blog');
 const contactRoutes = require('./routes/contact');
+const usersRoutes = require('./routes/users');
+
 const { errorHandler } = require('./middleware/errorHandler');
+const { generateOpenApiSpec } = require('./config/swagger');
 
 const app = express();
 
@@ -29,11 +35,31 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Swagger Documentation - single source of truth from Zod
+const fs = require('fs');
+const path = require('path');
+const openapiDocument = generateOpenApiSpec();
+
+const customCss = fs.readFileSync(path.join(__dirname, 'config', 'swagger-theme.css'), 'utf8');
+
+const swaggerUiOptions = {
+  customCss,
+  customSiteTitle: "Portfolio API Documentation",
+  swaggerOptions: {
+    persistAuthorization: true,
+    docExpansion: "list",
+    defaultModelsExpandDepth: -1
+  }
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiDocument, swaggerUiOptions));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/users', usersRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -65,5 +91,6 @@ pool.connect((err) => {
 // Start server regardless of database connection
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
   console.log(`Database connected: ${dbConnected}`);
 });

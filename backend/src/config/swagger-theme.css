@@ -1,0 +1,187 @@
+body, .swagger-ui {
+  background: #000000 !important;
+  background-image: radial-gradient(circle at 15% 50%, rgba(45, 55, 72, 0.4), transparent 50%), radial-gradient(circle at 85% 30%, rgba(20, 25, 40, 0.4), transparent 50%) !important;
+  color: #f5f5f7 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  min-height: 100vh;
+}
+
+.swagger-ui .topbar {
+  display: none !important;
+}
+
+.swagger-ui .info hgroup.main h2, 
+.swagger-ui .info hgroup.main h2 span, 
+.swagger-ui .info p,
+.swagger-ui .info li,
+.swagger-ui .info a,
+.swagger-ui .info .title {
+  color: #f5f5f7 !important;
+}
+
+.swagger-ui .scheme-container {
+  background: rgba(30, 30, 30, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: none !important;
+}
+
+.swagger-ui .opblock {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(25px) !important;
+  -webkit-backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  margin-bottom: 16px !important;
+  overflow: hidden;
+}
+
+.swagger-ui .opblock .opblock-summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.swagger-ui .opblock .opblock-summary-method {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+  font-weight: 600 !important;
+}
+
+/* Method Colors */
+.swagger-ui .opblock.opblock-get .opblock-summary-method { background: rgba(97, 175, 254, 0.2) !important; color: #61affe !important; border: 1px solid rgba(97,175,254,0.3) !important; }
+.swagger-ui .opblock.opblock-post .opblock-summary-method { background: rgba(73, 204, 144, 0.2) !important; color: #49cc90 !important; border: 1px solid rgba(73,204,144,0.3) !important; }
+.swagger-ui .opblock.opblock-put .opblock-summary-method { background: rgba(252, 161, 48, 0.2) !important; color: #fca130 !important; border: 1px solid rgba(252,161,48,0.3) !important; }
+.swagger-ui .opblock.opblock-delete .opblock-summary-method { background: rgba(249, 62, 62, 0.2) !important; color: #f93e3e !important; border: 1px solid rgba(249,62,62,0.3) !important; }
+.swagger-ui .opblock.opblock-patch .opblock-summary-method { background: rgba(80, 227, 194, 0.2) !important; color: #50e3c2 !important; border: 1px solid rgba(80,227,194,0.3) !important; }
+
+.swagger-ui .opblock .opblock-summary-path a, 
+.swagger-ui .opblock .opblock-summary-path__deprecated a {
+  color: #f5f5f7 !important;
+}
+
+.swagger-ui .opblock .opblock-summary-description {
+  color: #a1a1a6 !important;
+}
+
+.swagger-ui .opblock-body {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.swagger-ui table thead tr td, 
+.swagger-ui table thead tr th {
+  color: #f5f5f7 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.swagger-ui table tbody tr td {
+  color: #d1d1d6 !important;
+}
+
+.swagger-ui input[type=text], .swagger-ui input[type=password], .swagger-ui input[type=search], .swagger-ui input[type=email], .swagger-ui input[type=file], .swagger-ui textarea, .swagger-ui select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f5f5f7 !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.swagger-ui input:focus, .swagger-ui textarea:focus {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.1) !important;
+}
+
+.swagger-ui .btn {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f5f5f7 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.swagger-ui .btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+.swagger-ui .btn.execute {
+  background: rgba(10, 132, 255, 0.8) !important;
+  border: 1px solid rgba(10, 132, 255, 1) !important;
+  color: #fff !important;
+}
+
+.swagger-ui .btn.execute:hover {
+  background: rgba(10, 132, 255, 1) !important;
+  box-shadow: 0 4px 20px rgba(10, 132, 255, 0.4) !important;
+}
+
+.swagger-ui section.models {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  margin-top: 24px !important;
+}
+
+.swagger-ui section.models h4 {
+  color: #f5f5f7 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.swagger-ui .model-title, 
+.swagger-ui .model, 
+.swagger-ui .prop-type, 
+.swagger-ui .prop-format {
+  color: #d1d1d6 !important;
+}
+
+.swagger-ui .parameter__name {
+  color: #f5f5f7 !important;
+}
+.swagger-ui .parameter__type {
+  color: #a1a1a6 !important;
+}
+
+.swagger-ui .responses-inner h4, 
+.swagger-ui .responses-inner h5 {
+  color: #f5f5f7 !important;
+}
+
+.swagger-ui .response-col_status, 
+.swagger-ui .response-col_description {
+  color: #d1d1d6 !important;
+}
+
+.swagger-ui .dialog-ux .modal-ux {
+  background: rgba(30, 30, 30, 0.85) !important;
+  backdrop-filter: blur(25px) !important;
+  -webkit-backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 20px !important;
+  color: #f5f5f7 !important;
+}
+
+.swagger-ui .dialog-ux .modal-ux-header h3 {
+  color: #f5f5f7 !important;
+}
+.swagger-ui .dialog-ux .modal-ux-content h4 {
+  color: #f5f5f7 !important;
+}
+
+.swagger-ui .auth-container input {
+  color: #f5f5f7 !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+
+.swagger-ui label {
+  color: #a1a1a6 !important;
+}
+
+.swagger-ui .markdown p, 
+.swagger-ui .markdown pre, 
+.swagger-ui .markdown code {
+  color: #f5f5f7 !important;
+}
