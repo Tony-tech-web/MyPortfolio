@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, ExternalLink, Star, GitFork, Terminal, FileText, X } from 'lucide-react';
+import { Github, ExternalLink, Star, Terminal, FileText, X } from 'lucide-react';
 
 const GITHUB_USER = 'tony-tech-web';
 

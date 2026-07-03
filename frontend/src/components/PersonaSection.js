@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Shield, Zap, Target } from 'lucide-react';
 
 const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Icon, progress }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
     return (
         <motion.div
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
