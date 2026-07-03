@@ -15,13 +15,14 @@ const PersonaCard = ({ id, name, role, statusColor, image, description, icon: Ic
             className="group relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-[40px] border border-white/5 bg-zinc-950 transition-all duration-700"
         >
             {/* Background Image / Action Layer */}
-            <div className="absolute inset-0 z-0">
-                <img 
-                    src={image} 
-                    alt={name} 
-                    className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                <div 
+                    className="absolute inset-0 opacity-40 group-hover:opacity-80 transition-all duration-1000 scale-150 group-hover:scale-100"
+                    style={{
+                        background: `radial-gradient(circle at 50% 50%, ${statusColor}30 0%, transparent 60%)`
+                    }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
             </div>
 
             {/* Immersive Fluid Slider (Reference to User Image 1) */}

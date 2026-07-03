@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, ExternalLink, Star, GitFork, Terminal, FileText, X } from 'lucide-react';
+import { Github, ExternalLink, Star, GitFork, Terminal, FileText, ChevronDown } from 'lucide-react';
 
 const GITHUB_USER = 'tony-tech-web';
 
@@ -31,31 +31,54 @@ const LANG_COLORS = {
   Rust:       '#dea584',
 };
 
-const ProjectCard = ({ repo, index, onClick }) => {
+const ProjectCard = ({ repo, index, expanded, onToggle }) => {
+  const [readme, setReadme] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleToggle = async () => {
+    onToggle();
+    if (!expanded && readme === null) {
+      setLoading(true);
+      try {
+        let res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/main/README.md`);
+        if (!res.ok) {
+          res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/master/README.md`);
+        }
+        setReadme(res.ok ? stripMarkdown(await res.text()) : '');
+      } catch {
+        setReadme('');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     <motion.div
-      layoutId={`project-${repo.id}`}
+      layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      className="relative border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent-primary/20 transition-colors duration-500 cursor-pointer select-none h-32 flex flex-col justify-center"
-      onClick={() => onClick(repo)}
-      whileHover={{ y: -5, scale: 1.02 }}
+      className={`relative border border-white/5 transition-all duration-500 cursor-pointer overflow-hidden ${
+        expanded ? 'col-span-1 sm:col-span-2 lg:col-span-3 bg-zinc-950/80 shadow-2xl scale-[1.01] z-10' : 'bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent-primary/30 z-0'
+      }`}
+      onClick={handleToggle}
     >
       <div className="absolute top-0 right-0 w-8 h-px bg-gradient-to-l from-accent-primary/30 to-transparent pointer-events-none" />
       <div className="absolute top-0 right-0 h-8 w-px bg-gradient-to-b from-accent-primary/30 to-transparent pointer-events-none" />
 
-      <div className="p-5 flex items-start justify-between gap-3">
+      {/* Header */}
+      <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <span className="terminal-label text-[9px] text-zinc-600 tracking-[0.2em]">
               PROJ-{String(index + 1).padStart(2, '0')}
             </span>
           </div>
-          <motion.h3 layoutId={`title-${repo.id}`} className="text-sm md:text-base font-bold tracking-tight truncate mb-3 text-white">
+          <motion.h3 layout="position" className={`font-bold tracking-tight truncate transition-all ${expanded ? 'text-xl md:text-2xl text-accent-primary mb-2' : 'text-sm md:text-base text-white mb-3'}`}>
             {repo.name.replace(/-/g, '_')}
           </motion.h3>
-          <div className="flex items-center gap-4 text-zinc-600">
+          <div className="flex items-center gap-4 text-zinc-600 flex-wrap">
             <span className="flex items-center gap-1 text-[10px] font-mono">
               <Star size={9} className="text-zinc-500" /> {repo.stargazers_count}
             </span>
@@ -73,100 +96,68 @@ const ProjectCard = ({ repo, index, onClick }) => {
             )}
           </div>
         </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all rounded-md">
+            <Github size={14} />
+          </a>
+          {repo.homepage && (
+            <a href={repo.homepage} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all rounded-md">
+              <ExternalLink size={14} />
+            </a>
+          )}
+          <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.3 }} className="p-2 text-zinc-600 ml-2">
+            <ChevronDown size={14} />
+          </motion.div>
+        </div>
       </div>
-    </motion.div>
-  );
-};
 
-const ExpandedCard = ({ repo, onClose }) => {
-  const [readme, setReadme] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchReadme = async () => {
-      try {
-        let res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/main/README.md`);
-        if (!res.ok) {
-          res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/master/README.md`);
-        }
-        setReadme(res.ok ? stripMarkdown(await res.text()) : '');
-      } catch {
-        setReadme('');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReadme();
-  }, [repo.name]);
-
-  return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
-      />
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10 pointer-events-none">
-        <motion.div
-          layoutId={`project-${repo.id}`}
-          className="w-full max-w-2xl bg-zinc-950 border border-white/10 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto flex flex-col max-h-full relative"
-        >
-          {/* Header */}
-          <div className="p-6 md:p-8 border-b border-white/5 bg-white/[0.02] flex items-start justify-between">
-            <div>
-              <motion.h3 layoutId={`title-${repo.id}`} className="text-2xl font-bold text-white mb-2">
-                {repo.name.replace(/-/g, '_')}
-              </motion.h3>
+      {/* Expanded Content */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="border-t border-white/5 bg-black/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 md:p-8">
               {repo.description && (
-                <p className="text-sm font-mono text-zinc-400 italic mb-4">{repo.description}</p>
+                <p className="text-sm font-mono text-zinc-400 italic mb-6 pb-6 border-b border-white/5">
+                  {repo.description}
+                </p>
               )}
-              <div className="flex items-center gap-4">
-                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="btn-primary py-2 px-4 text-xs h-auto">
-                  <Github size={12} /> View Code
-                </a>
-                {repo.homepage && (
-                  <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="btn-outline py-2 px-4 text-xs h-auto">
-                    <ExternalLink size={12} /> Live Demo
-                  </a>
-                )}
+              
+              <div className="flex items-center gap-2 mb-4">
+                <FileText size={12} className="text-accent-primary" />
+                <span className="terminal-label text-[10px] text-accent-primary tracking-widest">README.md</span>
               </div>
+              
+              {loading ? (
+                <div className="space-y-3">
+                  {[75, 55, 85, 45, 65].map((w, i) => (
+                    <div key={i} className="h-1.5 bg-white/5 animate-pulse rounded" style={{ width: `${w}%` }} />
+                  ))}
+                </div>
+              ) : (
+                <pre className="text-[11px] md:text-xs font-mono text-zinc-400 leading-relaxed whitespace-pre-wrap break-words max-h-80 overflow-y-auto custom-scrollbar pr-2">
+                  {readme || '// No README found — repository undocumented.'}
+                </pre>
+              )}
             </div>
-            <button onClick={onClose} className="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
-              <X size={16} className="text-white" />
-            </button>
-          </div>
-
-          {/* Readme Content */}
-          <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1">
-            <div className="flex items-center gap-2 mb-6">
-              <FileText size={14} className="text-accent-primary" />
-              <span className="terminal-label text-accent-primary tracking-widest text-[10px]">README.md</span>
-            </div>
-            
-            {loading ? (
-              <div className="space-y-4">
-                {[80, 60, 90, 40, 70, 85].map((w, i) => (
-                  <div key={i} className="h-2 bg-white/5 animate-pulse rounded" style={{ width: `${w}%` }} />
-                ))}
-              </div>
-            ) : (
-              <pre className="text-xs md:text-sm font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap break-words">
-                {readme || '// No README found — repository undocumented.'}
-              </pre>
-            )}
-          </div>
-        </motion.div>
-      </div>
-    </>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
 const Projects = () => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedRepo, setSelectedRepo] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -210,7 +201,7 @@ const Projects = () => {
             </h2>
           </div>
           <p className="text-text-muted max-w-xs text-base font-light leading-relaxed">
-            Live repositories — sorted by interactions. Click any card to initiate focus mode.
+            Live repositories — sorted by interactions. Click any card to expand inline.
           </p>
         </div>
 
@@ -221,18 +212,18 @@ const Projects = () => {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {repos.map((repo, i) => (
-              <ProjectCard key={repo.id} repo={repo} index={i} onClick={setSelectedRepo} />
+              <ProjectCard 
+                key={repo.id} 
+                repo={repo} 
+                index={i} 
+                expanded={expandedId === repo.id}
+                onToggle={() => setExpandedId(expandedId === repo.id ? null : repo.id)}
+              />
             ))}
-          </div>
+          </motion.div>
         )}
-
-        <AnimatePresence>
-          {selectedRepo && (
-            <ExpandedCard repo={selectedRepo} onClose={() => setSelectedRepo(null)} />
-          )}
-        </AnimatePresence>
 
         <div className="mt-12 flex justify-center">
           <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer" className="btn-outline group">
