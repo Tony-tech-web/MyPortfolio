@@ -52,7 +52,7 @@ const SystemThinking = () => {
     ];
 
     return (
-        <section className="section-padding bg-zinc-950 relative border-y border-white/5 overflow-hidden">
+        <section className="section-padding bg-zinc-950 relative overflow-hidden">
             {/* Background noise */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] pointer-events-none" />
 

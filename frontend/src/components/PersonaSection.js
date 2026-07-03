@@ -94,7 +94,7 @@ const PersonaSection = () => {
             name: 'ANTHONY.',
             role: 'STARK ARCHITECT',
             statusColor: '#ff5500',
-            image: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&q=80&w=800',
+            image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
             icon: Shield,
             progress: 88,
             description: 'Engineering the future of technical architecture with high-fidelity systems.'
@@ -114,7 +114,7 @@ const PersonaSection = () => {
             name: 'ZERO.',
             role: 'VISUAL CRAFT',
             statusColor: '#60a5fa',
-            image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
+            image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
             icon: Target,
             progress: 74,
             description: 'Crafting command-level interfaces that bridge technical complexity with beauty.'
@@ -122,7 +122,7 @@ const PersonaSection = () => {
     ];
 
     return (
-        <section className="section-padding bg-background relative border-t border-white/5">
+        <section className="section-padding bg-background relative">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row items-center justify-between mb-20 gap-8">
                     <div>

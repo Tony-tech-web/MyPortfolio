@@ -60,7 +60,7 @@ const Blog = () => {
   ];
 
   return (
-    <section id="blog" className="section-padding bg-background relative border-t border-white/5">
+    <section id="blog" className="section-padding bg-background relative">
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12">
           <div className="max-w-2xl">

@@ -21,7 +21,7 @@ const Timeline = () => {
     ];
 
     return (
-        <section className="section-padding bg-background relative border-t border-white/5">
+        <section className="section-padding bg-background relative">
             <div className="container mx-auto px-6 max-w-4xl">
                 
                 <div className="flex items-center gap-3 mb-16 justify-center">

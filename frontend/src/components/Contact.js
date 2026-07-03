@@ -57,7 +57,7 @@ const Contact = () => {
     };
 
     return (
-        <section id="contact" className="section-padding bg-background relative border-t border-white/5">
+        <section id="contact" className="section-padding bg-background relative">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="flex flex-col lg:flex-row gap-20">
                     
