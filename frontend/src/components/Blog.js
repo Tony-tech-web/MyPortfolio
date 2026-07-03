@@ -18,7 +18,7 @@ const Blog = () => {
           return;
         }
 
-        const response = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${apiKey}&maxResults=4`);
+        const response = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${apiKey}&maxResults=6&orderBy=updated`);
         const data = await response.json();
         
         if (data.items) {

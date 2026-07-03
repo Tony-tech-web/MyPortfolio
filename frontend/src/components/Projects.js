@@ -1,183 +1,302 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ExternalLink, Github, Terminal, Star, GitBranch, Code } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Github, ExternalLink, Star, GitFork, Terminal, FileText, ChevronDown } from 'lucide-react';
 
-const Projects = () => {
-    const projects = [
-        {
-            id: 'PROJ-01',
-            title: 'Virtual Stylist',
-            description: 'JavaFX engine leveraging telemetry and computer vision models to curate high-end style profiles.',
-            metrics: { stars: 12, forks: 3, language: 'Java' },
-            url: 'https://github.com/tony-tech-web/VirtualStylist',
-            tags: ['Java', 'AI', 'OpenCV']
-        },
-        {
-            id: 'PROJ-02',
-            title: 'Nexus Core',
-            description: 'Enterprise resource orchestrator with high-concurrency Node.js architecture for supply chain logistics.',
-            metrics: { stars: 8, forks: 2, language: 'TypeScript' },
-            url: 'https://github.com/tony-tech-web/Nexus',
-            tags: ['Node.js', 'PostgreSQL', 'Auth']
-        },
-        {
-            id: 'PROJ-03',
-            title: 'Dropshop Architecture',
-            description: 'High-performance e-commerce storefront optimized for core web vitals and instantaneous state reconciliation.',
-            metrics: { stars: 6, forks: 1, language: 'React' },
-            url: 'https://github.com/tony-tech-web/Dropshop-website',
-            tags: ['React', 'MongoDB', 'Edge']
-        },
-        {
-            id: 'PROJ-04',
-            title: 'News Aggregation Engine',
-            description: 'Real-time content delivery network featuring robust article management and technical SEO orchestration.',
-            metrics: { stars: 7, forks: 3, language: 'JavaScript' },
-            url: 'https://github.com/tony-tech-web/advanced-news-website',
-            tags: ['Express', 'NodeJS', 'SEO']
+const GITHUB_USER = 'tony-tech-web';
+
+// Strip markdown to clean readable text
+const stripMarkdown = (md) => {
+  if (!md) return '';
+  return md
+    .replace(/```[\s\S]*?```/g, '[code block]')
+    .replace(/`[^`]+`/g, (m) => m.replace(/`/g, ''))
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/^[-*+]\s+/gm, '• ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
+const LANG_COLORS = {
+  JavaScript: '#f7df1e',
+  TypeScript: '#3178c6',
+  Java:       '#b07219',
+  Python:     '#3572A5',
+  HTML:       '#e34c26',
+  CSS:        '#563d7c',
+  Kotlin:     '#A97BFF',
+  Go:         '#00ADD8',
+  Rust:       '#dea584',
+};
+
+// ─── Individual Project Card ────────────────────────────────────────────────
+const ProjectCard = ({ repo, index }) => {
+  const [expanded, setExpanded]       = useState(false);
+  const [readme, setReadme]           = useState(null);
+  const [readmeLoading, setLoading]   = useState(false);
+
+  const toggle = async () => {
+    const next = !expanded;
+    setExpanded(next);
+
+    if (next && readme === null) {
+      setLoading(true);
+      try {
+        // Try main → master branch for README
+        let res = await fetch(
+          `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/main/README.md`
+        );
+        if (!res.ok) {
+          res = await fetch(
+            `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/master/README.md`
+          );
         }
-    ];
+        setReadme(res.ok ? stripMarkdown(await res.text()) : '');
+      } catch {
+        setReadme('');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
-    return (
-        <section id="projects" className="section-padding bg-background relative border-y border-white/5">
-            <div className="container mx-auto px-6">
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12">
-                    <div className="max-w-2xl">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-8 h-px bg-accent-primary" />
-                            <span className="terminal-label">Case Studies</span>
-                        </div>
-                        <h2 className="text-4xl md:text-7xl font-bold tracking-tighter mb-8 leading-[0.9]">
-                            Engineering <br />
-                            <span className="text-accent-primary">Digital Products.</span>
-                        </h2>
-                    </div>
-                    <p className="text-text-muted max-w-sm text-lg font-light leading-relaxed">
-                        A verification of technical breadth across full-stack orchestration and system reliability.
-                    </p>
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      className="relative border border-white/5 bg-white/[0.02] hover:border-accent-primary/20 transition-colors duration-500 cursor-pointer select-none"
+      onClick={toggle}
+    >
+      {/* ── Corner accents ─────────────────────────────────── */}
+      <div className="absolute top-0 right-0 w-8 h-px bg-gradient-to-l from-accent-primary/30 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 h-8 w-px bg-gradient-to-b from-accent-primary/30 to-transparent pointer-events-none" />
+
+      {/* ── Collapsed header — always visible ──────────────── */}
+      <div className="p-5 flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="terminal-label text-[9px] text-zinc-600 tracking-[0.2em]">
+              PROJ-{String(index + 1).padStart(2, '0')}
+            </span>
+          </div>
+
+          <h3 className="text-sm font-bold tracking-tight truncate mb-3 group-hover:text-accent-primary transition-colors">
+            {repo.name.replace(/-/g, '_')}
+          </h3>
+
+          {/* Meta — stars · forks · language */}
+          <div className="flex items-center gap-4 text-zinc-600">
+            <span className="flex items-center gap-1 text-[10px] font-mono">
+              <Star size={9} className="text-zinc-500" /> {repo.stargazers_count}
+            </span>
+            <span className="flex items-center gap-1 text-[10px] font-mono">
+              <GitFork size={9} className="text-zinc-500" /> {repo.forks_count}
+            </span>
+            {repo.language && (
+              <span className="flex items-center gap-1.5 text-[10px] font-mono">
+                <span
+                  className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0"
+                  style={{ background: LANG_COLORS[repo.language] || '#555' }}
+                />
+                {repo.language}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Right — icon links + chevron */}
+        <div className="flex items-center gap-1.5 shrink-0 mt-0.5">
+          <a
+            href={repo.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="p-1.5 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all"
+            title="View on GitHub"
+          >
+            <Github size={11} />
+          </a>
+          {repo.homepage && (
+            <a
+              href={repo.homepage}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="p-1.5 border border-white/5 hover:border-accent-primary/40 hover:text-accent-primary transition-all"
+              title="Live Demo"
+            >
+              <ExternalLink size={11} />
+            </a>
+          )}
+          <motion.div
+            animate={{ rotate: expanded ? 180 : 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="p-1.5 text-zinc-700"
+          >
+            <ChevronDown size={11} />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ── Expanded README panel ──────────────────────────── */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="readme"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-white/5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-5">
+              {/* README label */}
+              <div className="flex items-center gap-2 mb-4">
+                <FileText size={11} className="text-accent-primary" />
+                <span className="terminal-label text-[9px] text-accent-primary tracking-widest">
+                  README.md
+                </span>
+              </div>
+
+              {readmeLoading ? (
+                /* Skeleton shimmer */
+                <div className="space-y-2">
+                  {[75, 55, 85, 45, 65].map((w, i) => (
+                    <div
+                      key={i}
+                      className="h-1.5 bg-white/5 animate-pulse rounded"
+                      style={{ width: `${w}%` }}
+                    />
+                  ))}
                 </div>
+              ) : (
+                <pre className="text-[10.5px] font-mono text-zinc-400 leading-relaxed whitespace-pre-wrap break-words max-h-56 overflow-y-auto pr-1">
+                  {readme || '// No README found — repository undocumented.'}
+                </pre>
+              )}
 
-                <div className="grid grid-cols-1 gap-12">
-                    {projects.map((project, i) => (
-                        <motion.div
-                            key={project.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="group relative flex flex-col lg:flex-row rounded-[2rem] overflow-hidden border border-white/5 bg-white/[0.02] hover:border-accent-primary/20 transition-all duration-700 hover:shadow-[0_0_80px_rgba(0,0,0,0.4)]"
-                        >
-                            {/* Narrative Pane - Left Side */}
-                            <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col bg-white/[0.02]">
-                                <div className="flex items-center gap-4 mb-10">
-                                    <span className="terminal-label text-zinc-600 text-[10px] tracking-[0.2em]">{project.id}</span>
-                                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
-                                </div>
-
-                                <motion.h3 
-                                    className="text-4xl md:text-5xl font-bold tracking-tighter mb-8 leading-none"
-                                >
-                                    {project.title}
-                                </motion.h3>
-                                
-                                <p className="text-text-muted text-lg font-light leading-relaxed mb-10 max-w-2xl">
-                                    {project.description}
-                                </p>
-
-                                <div className="flex flex-wrap gap-3 mb-12">
-                                    {project.tags.map(tag => (
-                                        <span key={tag} className="px-4 py-1.5 bg-black/40 border border-white/5 rounded-full text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                <div className="mt-auto pt-8 border-t border-white/5">
-                                    <a 
-                                        href={project.url}
-                                        className="inline-flex items-center gap-2 text-[11px] font-mono text-zinc-500 hover:text-accent-primary transition-colors group/link"
-                                    >
-                                        <span className="border-b border-zinc-800 group-hover/link:border-accent-primary transition-colors pb-0.5">Read more_</span>
-                                        <ExternalLink size={12} className="opacity-0 group-hover/link:opacity-100 transition-all" />
-                                    </a>
-                                </div>
-                            </div>
-
-                            {/* Technical Pane - Right Side */}
-                            <div className="w-full lg:w-[380px] p-8 md:p-12 bg-black/40 flex flex-col justify-between border-l border-white/5 relative">
-                                {/* Orange Accent Detail */}
-                                <div className="absolute top-0 right-0 w-24 h-px bg-gradient-to-l from-accent-primary/40 to-transparent" />
-                                <div className="absolute top-0 right-0 h-24 w-px bg-gradient-to-b from-accent-primary/40 to-transparent" />
-
-                                <div className="flex justify-between items-start mb-16">
-                                    <div className="p-4 terminal-panel rounded-2xl bg-white/[0.02]">
-                                        <Terminal size={24} className="text-zinc-600 group-hover:text-accent-primary transition-colors duration-500" />
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <a 
-                                            href={project.url} 
-                                            className="p-3 rounded-full bg-white/5 hover:bg-accent-primary hover:text-black transition-all duration-500"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            <Github size={18} />
-                                        </a>
-                                        <a 
-                                            href={project.url}
-                                            className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-500"
-                                        >
-                                            <ExternalLink size={18} />
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-8">
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 group/metric">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <Star size={14} className="text-accent-primary group-hover/metric:animate-pulse" />
-                                                <span className="text-[20px] font-bold text-white leading-none">{project.metrics.stars}</span>
-                                            </div>
-                                            <span className="terminal-label text-[9px] text-zinc-600 uppercase">stars</span>
-                                        </div>
-                                        <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 group/metric">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <GitBranch size={14} className="text-zinc-400 group-hover/metric:rotate-45 transition-transform" />
-                                                <span className="text-[20px] font-bold text-white leading-none">{project.metrics.forks}</span>
-                                            </div>
-                                            <span className="terminal-label text-[9px] text-zinc-600 uppercase">forks</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-6 rounded-2xl bg-accent-primary/[0.03] border border-accent-primary/10">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <Code size={16} className="text-accent-primary" />
-                                                <span className="text-sm font-medium tracking-tight text-zinc-300">Stack_Lead</span>
-                                            </div>
-                                            <span className="terminal-label text-[10px] text-accent-primary">{project.metrics.language}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-
-                <div className="mt-20 flex justify-center">
-                    <a 
-                        href="https://github.com/tony-tech-web" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="btn-outline group"
-                    >
-                        <Terminal size={14} className="group-hover:text-accent-primary" />
-                        Access Repository Archive
-                    </a>
-                </div>
+              {/* GitHub description as footer if available */}
+              {repo.description && (
+                <p className="mt-4 pt-4 border-t border-white/5 text-[10px] font-mono text-zinc-600 italic">
+                  {repo.description}
+                </p>
+              )}
             </div>
-        </section>
-    );
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+// ─── Projects Section ────────────────────────────────────────────────────────
+const Projects = () => {
+  const [repos, setRepos]     = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      try {
+        const res = await fetch(
+          `https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=100`
+        );
+        if (!res.ok) throw new Error('GitHub API unavailable');
+
+        const data = await res.json();
+
+        const ninetyDaysAgo = new Date();
+        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+        const byInteractions = (a, b) =>
+          (b.stargazers_count + b.forks_count) - (a.stargazers_count + a.forks_count);
+
+        // Filter to last 90 days first
+        let filtered = data
+          .filter((r) => !r.fork && !r.archived)
+          .filter((r) => new Date(r.pushed_at) > ninetyDaysAgo)
+          .sort(byInteractions);
+
+        // Fallback: no activity in 90 days → show most interacted all-time
+        if (filtered.length === 0) {
+          filtered = data
+            .filter((r) => !r.fork && !r.archived)
+            .sort(byInteractions);
+        }
+
+        setRepos(filtered.slice(0, 6));
+      } catch {
+        // Static fallback if GitHub API is down or rate-limited
+        setRepos([
+          { id: 1,  name: 'VirtualStylist',        html_url: 'https://github.com/tony-tech-web/VirtualStylist',        stargazers_count: 12, forks_count: 3, language: 'Java',       homepage: null, description: 'AI-powered outfit recommender built with JavaFX.' },
+          { id: 2,  name: 'Dropshop-website',       html_url: 'https://github.com/tony-tech-web/Dropshop-website',       stargazers_count: 6,  forks_count: 1, language: 'JavaScript', homepage: null, description: 'High-performance e-commerce storefront.' },
+          { id: 3,  name: 'advanced-news-website',  html_url: 'https://github.com/tony-tech-web/advanced-news-website',  stargazers_count: 7,  forks_count: 3, language: 'JavaScript', homepage: null, description: 'Real-time news aggregation engine.' },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRepos();
+  }, []);
+
+  return (
+    <section id="projects" className="section-padding bg-background relative border-y border-white/5">
+      <div className="container mx-auto px-6">
+
+        {/* ── Section header ────────────────────────────────── */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-8">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-px bg-accent-primary" />
+              <span className="terminal-label">Case_Studies</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter leading-[0.9]">
+              Engineering <br />
+              <span className="text-accent-primary">Digital Products.</span>
+            </h2>
+          </div>
+          <p className="text-text-muted max-w-xs text-base font-light leading-relaxed">
+            Live repositories — sorted by interactions. Click any card to expand and read its README.
+          </p>
+        </div>
+
+        {/* ── Cards ─────────────────────────────────────────── */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-28 border border-white/5 bg-white/[0.02] animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {repos.map((repo, i) => (
+              <ProjectCard key={repo.id} repo={repo} index={i} />
+            ))}
+          </motion.div>
+        )}
+
+        {/* ── Footer link ───────────────────────────────────── */}
+        <div className="mt-12 flex justify-center">
+          <a
+            href={`https://github.com/${GITHUB_USER}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline group"
+          >
+            <Terminal size={14} className="group-hover:text-accent-primary" />
+            Access Repository Archive
+          </a>
+        </div>
+
+      </div>
+    </section>
+  );
 };
 
 export default Projects;
