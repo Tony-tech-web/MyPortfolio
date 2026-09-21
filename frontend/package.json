@@ -15,9 +15,9 @@
     "three": "^0.164.1"
   },
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "vite build",
+    "dev": "node init && vite",
+    "start": "node init && vite",
+    "build": "node init && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit"
   },
