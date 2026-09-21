@@ -166,6 +166,23 @@ const PersonaSection: React.FC = () => {
     return (
         <section id="identity-matrix" className="section-padding bg-background relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
+                <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-8">
+                    <div>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-8 h-px bg-accent-primary" />
+                            <span className="terminal-label">Engineering_Pillars</span>
+                        </div>
+                        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase italic leading-[0.9]">
+                            The Identity <span className="text-accent-primary">Matrix.</span>
+                        </h2>
+                    </div>
+                    <div className="max-w-sm">
+                        <p className="text-text-muted text-sm font-light leading-relaxed">
+                            Tri-pillar architectural framework: translating raw technical complexity into reliable, audit-ready digital systems.
+                        </p>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-4">
                     {pillars.map(pillar => (
                         <PersonaCard key={pillar.id} {...pillar} />
