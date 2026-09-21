@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Server, Database, BrainCircuit, Layout, ArrowRight, Code2 } from 'lucide-react';
+import { OrbitModule } from '../types/portfolio';
 
-const OrbitCaseStudy = () => {
-    const modules = [
+const OrbitCaseStudy: React.FC = () => {
+    const modules: OrbitModule[] = [
         {
             title: "Study Assistant",
             icon: <BrainCircuit size={18} className="text-accent-primary" />,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useTransform, AnimatePresence, PanInfo } from 'framer-motion';
+import { ProofCard } from '../types/portfolio';
 
-const CARD_DATA = [
+const CARD_DATA: ProofCard[] = [
   {
     id: 1,
     title: "3+ Full-Stack Production Apps",
@@ -36,14 +37,19 @@ const CARD_DATA = [
   }
 ];
 
-const Card = ({ data, isFront, setCards, index, isMobile }) => {
+interface CardProps {
+  data: ProofCard;
+  isFront: boolean;
+  setCards: React.Dispatch<React.SetStateAction<ProofCard[]>>;
+  index: number;
+  isMobile: boolean;
+}
+
+const Card: React.FC<CardProps> = ({ data, isFront, setCards, index, isMobile }) => {
   const x = useMotionValue(0);
   
-  // Desktop: Stacked on the right, slightly offset to show depth.
-  // Mobile: Stacked vertically.
-  
-  const desktopXOffset = index * 20; // Fan slightly to the right to avoid overlapping text
-  const desktopYOffset = index * -15; // Fan upwards slightly
+  const desktopXOffset = index * 20;
+  const desktopYOffset = index * -15;
   const desktopScale = 1 - index * 0.05;
   
   const mobileYOffset = index * 15;
@@ -52,12 +58,14 @@ const Card = ({ data, isFront, setCards, index, isMobile }) => {
   const rotate = useTransform(x, [-150, 0, 150], [-10, index === 0 ? 0 : (index * -2), 10]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
 
-  const handleDragEnd = (event, info) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 100 || info.offset.x < -100) {
       setCards((prev) => {
         const newCards = [...prev];
         const swipedCard = newCards.shift();
-        newCards.push(swipedCard);
+        if (swipedCard) {
+          newCards.push(swipedCard);
+        }
         return newCards;
       });
     }
@@ -91,7 +99,6 @@ const Card = ({ data, isFront, setCards, index, isMobile }) => {
           y: isFront ? -10 : (isMobile ? mobileYOffset : desktopYOffset) 
       }}
     >
-      {/* Glossy highlight effect */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none" />
       
       <div className="relative z-10">
@@ -102,9 +109,9 @@ const Card = ({ data, isFront, setCards, index, isMobile }) => {
   );
 };
 
-const ProofStack = () => {
-  const [cards, setCards] = useState(CARD_DATA);
-  const [isMobile, setIsMobile] = useState(true);
+const ProofStack: React.FC = () => {
+  const [cards, setCards] = useState<ProofCard[]>(CARD_DATA);
+  const [isMobile, setIsMobile] = useState<boolean>(true);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -160,12 +167,12 @@ const ProofStack = () => {
                 <AnimatePresence>
                 {cards.map((card, index) => (
                     <Card
-                    key={card.id}
-                    data={card}
-                    isFront={index === 0}
-                    setCards={setCards}
-                    index={index}
-                    isMobile={isMobile}
+                      key={card.id}
+                      data={card}
+                      isFront={index === 0}
+                      setCards={setCards}
+                      index={index}
+                      isMobile={isMobile}
                     />
                 ))}
                 </AnimatePresence>

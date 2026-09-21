@@ -2,11 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Quote, MapPin, GraduationCap, Briefcase, Shield } from 'lucide-react';
 
-const About = () => {
-  const stats = [
+interface AboutStat {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}
+
+const About: React.FC = () => {
+  const stats: AboutStat[] = [
     { label: 'Location', value: 'Abuja, Nigeria', icon: <MapPin size={16} /> },
     { label: 'Degree', value: 'B.Sc. Computer Science', icon: <GraduationCap size={16} /> },
-    { label: 'Experience', value: '3+ Years Engineering', icon: <Briefcase size={16} /> },
+    { label: 'Experience', value: '4+ Years Engineering', icon: <Briefcase size={16} /> },
     { label: 'Security', value: 'Audit-Ready Patterns', icon: <Shield size={16} /> }
   ];
 
@@ -47,7 +53,7 @@ const About = () => {
             </div>
 
             <div className="mt-8 space-y-3">
-              {stats.map((stat, i) => (
+              {stats.map((stat) => (
                 <div 
                    key={stat.label}
                    className="flex items-center gap-4 px-6 py-4 terminal-panel hover:border-zinc-700 transition-colors"
@@ -101,11 +107,11 @@ const About = () => {
               <div className="mt-16 pt-16 border-t border-white/5">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
                    <div>
-                     <p className="text-4xl font-bold mb-2 tracking-tighter">03 <span className="text-xs font-mono text-zinc-500 uppercase">YRS</span></p>
+                     <p className="text-4xl font-bold mb-2 tracking-tighter">04+ <span className="text-xs font-mono text-zinc-500 uppercase">YRS</span></p>
                      <p className="terminal-label text-zinc-600">Active_Engineering</p>
                    </div>
                    <div>
-                     <p className="text-4xl font-bold mb-2 tracking-tighter">20 <span className="text-xs font-mono text-zinc-500 uppercase">EXE</span></p>
+                     <p className="text-4xl font-bold mb-2 tracking-tighter">25+ <span className="text-xs font-mono text-zinc-500 uppercase">EXE</span></p>
                      <p className="terminal-label text-zinc-600">Production_Deploys</p>
                    </div>
                    <div>

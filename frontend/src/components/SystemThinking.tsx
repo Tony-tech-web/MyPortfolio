@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Network, DatabaseZap, Lock, Cpu, CloudCog } from 'lucide-react';
+import { SystemArchitectureItem } from '../types/portfolio';
 
-const SystemThinking = () => {
-    const systems = [
+const SystemThinking: React.FC = () => {
+    const systems: SystemArchitectureItem[] = [
         {
             title: "API Design Patterns",
             icon: <Network className="text-accent-primary mb-4" size={24} />,

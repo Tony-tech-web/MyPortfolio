@@ -1,8 +1,16 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-const GridBackground = () => {
-  const nodes = useMemo(() => {
+interface ParticleNode {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  delay: number;
+}
+
+const GridBackground: React.FC = () => {
+  const nodes = useMemo<ParticleNode[]>(() => {
     return Array.from({ length: 15 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,

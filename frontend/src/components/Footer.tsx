@@ -2,12 +2,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, Twitter, Mail, Instagram, ArrowUp } from 'lucide-react';
 
-const Footer = () => {
+interface SocialLink {
+    icon: React.ReactNode;
+    href: string;
+    label: string;
+}
+
+const Footer: React.FC = () => {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const socialLinks = [
+    const socialLinks: SocialLink[] = [
         { icon: <Github size={16} />, href: 'https://github.com/tony-tech-web', label: 'GitHub' },
         { icon: <Twitter size={16} />, href: 'https://x.com/AliduTony', label: 'Twitter' },
         { icon: <Mail size={16} />, href: 'mailto:tonyalidu@gmail.com', label: 'Email' },

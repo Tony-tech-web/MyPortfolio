@@ -1,8 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { TimelineEvent } from '../types/portfolio';
 
-const Timeline = () => {
-    const events = [
+const Timeline: React.FC = () => {
+    const events: TimelineEvent[] = [
+        {
+            year: "2026",
+            title: "Autonomous Agentic Systems & Real-Time Sync",
+            built: "Engineered production agentic workflows featuring strict schema-driven tool calling, real-time WebSocket state synchronization, and decoupled event-reducing state architectures.",
+            learned: "Mastered bridging non-deterministic LLM cognition with deterministic backend constraints, zero-leak memory management, and audit-grade telemetry."
+        },
+        {
+            year: "2025",
+            title: "Scalable Full-Stack Systems & Headless Architecture",
+            built: "Architected decoupled cloud infrastructures, high-throughput REST APIs with strict Zod/OpenAPI contracts, and modular headless commerce applications.",
+            learned: "Honed relational database normalization, Row-Level Security (RLS) enforcement, and edge-caching strategies under high-concurrency workloads."
+        },
         {
             year: "2024",
             title: "Portfolio API & Dynamic Ecosystem",

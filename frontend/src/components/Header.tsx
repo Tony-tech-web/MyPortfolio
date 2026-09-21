@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Menu, X, Terminal } from 'lucide-react';
 
-const Header = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [theme, setTheme] = useState('dark');
+interface NavLink {
+    name: string;
+    href: string;
+}
+
+const Header: React.FC = () => {
+    const [isScrolled, setIsScrolled] = useState<boolean>(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+    const [theme, setTheme] = useState<string>('dark');
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -25,7 +30,7 @@ const Header = () => {
         document.documentElement.setAttribute('data-theme', newTheme);
     };
 
-    const navLinks = [
+    const navLinks: NavLink[] = [
         { name: 'About', href: '#about' },
         { name: 'Skills', href: '#skills' },
         { name: 'Projects', href: '#projects' },
@@ -59,7 +64,7 @@ const Header = () => {
 
                     {/* Desktop Command Center */}
                     <div className="hidden md:flex items-center space-x-12">
-                        {navLinks.map((link, i) => (
+                        {navLinks.map((link) => (
                             <a
                                 key={link.name}
                                 href={link.href}

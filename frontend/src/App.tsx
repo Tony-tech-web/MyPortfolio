@@ -12,12 +12,11 @@ import CustomCursor from './components/CustomCursor';
 import GridBackground from './components/GridBackground';
 import ProofStack from './components/ProofStack';
 import PersonaSection from './components/PersonaSection';
-
 import OrbitCaseStudy from './components/OrbitCaseStudy';
 import SystemThinking from './components/SystemThinking';
 import Timeline from './components/Timeline';
 
-function App() {
+const App: React.FC = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -71,6 +70,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
-const CustomCursor = () => {
-    const [isHovered, setIsHovered] = useState(false);
-    const [isPointer, setIsPointer] = useState(false);
+const CustomCursor: React.FC = () => {
+    const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [isPointer, setIsPointer] = useState<boolean>(false);
     
     // Spring physics for smooth trailing
     const mouseX = useSpring(0, { stiffness: 500, damping: 28 });
@@ -14,18 +14,20 @@ const CustomCursor = () => {
     const ringY = useSpring(0, { stiffness: 150, damping: 20 });
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
+        const handleMouseMove = (e: MouseEvent) => {
             mouseX.set(e.clientX);
             mouseY.set(e.clientY);
             ringX.set(e.clientX);
             ringY.set(e.clientY);
             
             // Detect clickable elements
-            const target = e.target;
-            const isClickable = window.getComputedStyle(target).cursor === 'pointer' || 
-                              target.tagName === 'A' || 
-                              target.tagName === 'BUTTON';
-            setIsPointer(isClickable);
+            const target = e.target as HTMLElement | null;
+            if (target) {
+                const isClickable = window.getComputedStyle(target).cursor === 'pointer' || 
+                                  target.tagName === 'A' || 
+                                  target.tagName === 'BUTTON';
+                setIsPointer(isClickable);
+            }
         };
 
         const handleMouseDown = () => setIsHovered(true);

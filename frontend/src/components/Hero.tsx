@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ArrowRight, Download, Command } from 'lucide-react';
 
-const Hero = () => {
-    const [currentWordIndex, setCurrentWordIndex] = useState(0);
-    const [currentText, setCurrentText] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
+const Hero: React.FC = () => {
+    const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
+    const [currentText, setCurrentText] = useState<string>('');
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const words = useMemo(
+    const words = useMemo<string[]>(
         () => ["Software Engineer", "Systems Architect", "Java Specialist", "UI/UX Artisan"],
         []
     );
@@ -24,7 +24,7 @@ const Hero = () => {
             delay = 500;
         }
 
-        const timeout = setTimeout(() => {
+        const timeout: NodeJS.Timeout = setTimeout(() => {
             if (!isDeleting) {
                 setCurrentText(currentWord.substring(0, currentText.length + 1));
                 if (currentText === currentWord) setIsDeleting(true);
@@ -36,7 +36,7 @@ const Hero = () => {
         return () => clearTimeout(timeout);
     }, [currentText, isDeleting, currentWordIndex, words]);
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -47,7 +47,7 @@ const Hero = () => {
         }
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 10 },
         visible: {
             opacity: 1,
@@ -81,7 +81,7 @@ const Hero = () => {
                         <div className="h-8 w-px bg-white/5 mx-2" />
                         <div className="flex flex-col">
                             <span className="terminal-label">Last Upload</span>
-                            <span className="text-xs font-mono text-zinc-500">2024.02.09.1934</span>
+                            <span className="text-xs font-mono text-zinc-500">2026.03.21.1440</span>
                         </div>
                     </motion.div>
 
@@ -142,7 +142,7 @@ const Hero = () => {
                             </a>
                             
                             <a 
-                                href={(process.env.PUBLIC_URL || '') + '/Alidu%20Anthony%20-%20Curriculum%20Vitae.pdf'}
+                                href="/Alidu%20Anthony%20-%20Curriculum%20Vitae.pdf"
                                 download
                                 className="w-12 h-12 terminal-panel flex items-center justify-center hover:bg-white/5 transition-all group"
                                 title="Download Dossier"
